@@ -1,0 +1,43 @@
+{
+  "pokeys": [{
+      "serialNumber": "25774",
+      "name": "pokey_1",
+      "pins": [{
+          "pin": 1,
+          "name": "I_OH_FUEL_PUMP_LA",
+          "description": "Left AFT fuel pump indicator",
+          "type": "DIGITAL_INPUT"
+        },
+        {
+          "pin": 2,
+          "name": "I_OH_FUEL_PUMP_LF",
+          "description": "Left FWD fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 3,
+          "name": "I_OH_EGT",
+          "description": "Left FWD fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        }
+      ]
+    },
+    {
+      "serialNumber": "25765",
+      "name": "pokey_2",
+      "pins": [{
+          "pin": 1,
+          "name": "I_OH_FUEL_PUMP_LA",
+          "description": "Left AFT fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 2,
+          "name": "I_OH_FUEL_PUMP_LF",
+          "description": "Left FWD fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        }
+      ]
+    }
+  ]
+}

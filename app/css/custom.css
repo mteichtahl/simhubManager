@@ -1,0 +1,42 @@
+.available-magnet {
+  fill: yellow;
+}
+
+
+/* element styling */
+
+.available-cell rect {
+  stroke-dasharray: 5, 2;
+}
+
+.splitter {
+  height: 10px;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
+  cursor: row-resize;
+}
+
+.containerPanel {
+  resize: none;
+  border: none;
+  overflow: hidden;
+}
+
+.topPanel {
+  resize: vertical;
+  padding: 10px;
+  overflow: auto;
+  height: 70%
+}
+
+.bottomPanel {
+  resize: vertical;
+  /* resizable */
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
+  background-color: white !important;
+}
+
+.pane-sm {
+  max-width: 30% !important;
+}

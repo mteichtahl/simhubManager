@@ -1,0 +1,3 @@
+{
+  "/pokeys/:id": "/pokeys?serialNumber=:id"
+}
