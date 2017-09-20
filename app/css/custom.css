@@ -38,5 +38,6 @@
 }
 
 .pane-sm {
-  max-width: 30% !important;
+  max-width: 300px !important;
+  min-width: 200px !important;
 }

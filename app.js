@@ -1,5 +1,8 @@
 const electron = require('electron')
-const {app, Menu} = require('electron')
+const {
+  app,
+  Menu
+} = require('electron')
 const settings = require('electron-settings')
 var ipc = require('electron').ipcMain
 let rp = require('request-promise')
@@ -22,13 +25,13 @@ let mainWindow
 log.transports.file.level = false
 log.transports.console.format = '{h}:{i}:{s}:{ms} [{level}] {text}'
 
-function createWindow () {
+function createWindow() {
   log.info('Creating main window')
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1350,
+    height: 800,
     'min-width': 500,
     'min-height': 200,
     'accept-first-mouse': true,

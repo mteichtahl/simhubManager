@@ -4,17 +4,20 @@ const $ = jQuery = require('jquery')
 const _ = require('lodash')
 const backbone = require('backbone')
 const joint = require('jointjs')
+const { Pokey } = require('./js/lib/pokey')
+const { SimhubManagerTree } = require('./js/lib/simhubManagerTree')
 
 var {PokeyShape} = require('./js/lib/pokeyShape')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)
 
+let pokeysConfig = []
 let pokeys = []
 
 ipc.on('api-data', function (event, val) {
   _.each(val, function (data) {
-    pokeys.push(data)
+    pokeysConfig.push(data)
   })
 })
 
@@ -24,126 +27,41 @@ ipc.send('get-api-data', {
 })
 
 $(function () {
-  let $deviceTree = $('#jstree_demo_div')
+  let deviceTree = new SimhubManagerTree($('#jstree_demo_div'))
 
-  $deviceTree.jstree({
-    'core': {
-      'check_callback': true,
-      'multiple': false,
-      'animation': 0,
-      'themes': {
-        'responsive': false
-      }
-      // 'data': [
-      //   {
-      //     'text': 'Pro-Sim',
-      //     'icon': 'images/simIcon.png'
-      //   },
-      //   {
-      //     'text': 'Elec (pokey_2)',
-      //     'icon': 'images/pokeyIcon.png',
-      //     'children': [
-      //       {
-      //         'text': 'Digital IO (3/55)',
-      //         'icon': 'images/ioIcon.png',
-      //         children: [
-      //           {
-      //             'text': 'Lights On (1)',
-      //             'icon': 'images/switchIcon.png',
-      //             'children': [
-      //               {
-      //                 'text': 'Pin 1',
-      //                 'icon': 'images/inputIcon.png'
-      //               },
-      //               {
-      //                 'text': 'Default On',
-      //                 'icon': 'images/defaultIcon.png'
-      //               },
-      //               {
-      //                 'text': 'Default On',
-      //                 'icon': 'images/defaultIcon.png'
-      //               }
-      //             ]
-      //           },
-      //           {
-      //             'text': 'LED 1 (1)',
-      //             'icon': 'images/outputIcon.png',
-      //             'children': [
-      //               {
-      //                 'text': 'Pin 2',
-      //                 'icon': 'images/outputIcon.png'
-      //               },
-      //               {
-      //                 'text': 'Default Off',
-      //                 'icon': 'images/defaultIcon.png'
-      //               }
-      //             ]
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         'text': 'Displays (1)',
-      //         'icon': 'images/displaysIcon.png',
-      //         'children': [
-      //           {
-      //             'text': 'EGT',
-      //             'icon': 'images/displayIcon.png'
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         'text': 'Servos (1)',
-      //         'icon': 'images/servosIcon.png',
-      //         'children': [
-      //           {
-      //             'text': 'Airspeed',
-      //             'icon': 'images/servoIcon.png'
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         'text': 'Rotaries (1)',
-      //         'icon': 'images/rotarysIcon.png',
-      //         'children': [
-      //           {
-      //             'text': 'Volume (5/6/9)',
-      //             'icon': 'images/rotaryIcon.png'
-      //           }
-      //         ]
-      //       }
+  _.each(pokeysConfig, function (pokey, pokeyIndex) {
+    var device = new Pokey(pokey.name)
+    device.setSerialNumber(pokey.serialNumber)
 
-    //     ]
-    //   }
-    // ]
-    },
-    'plugins': ['contextmenu', 'unique', 'types', 'state']
-  })
-
-  _.each(pokeys, function (pokey, pokeyIndex) {
-    var $deviceTree = $('#jstree_demo_div')
-
-    var parentPokeyId = $deviceTree.jstree().create_node('#', {
-      text: `${pokey.name} (${pokey.serialNumber})`,
-      'icon': 'images/pokeyIcon.png'
-    })
-    pokeys[pokeyIndex].nodeId = parentPokeyId
-
-    if (pokey.pins.length >0 ) {
-      var pinParentId = $deviceTree.jstree().create_node(parentPokeyId, {
-        text: `Digital IO (${pokey.pins.length}/55)`,
-        icon: 'images/ioIcon.png'
-      })
-
-      _.each(pokey.pins, function (pin, pinIndex) {
-        var pinId = $deviceTree.jstree().create_node(pinParentId, {
-          text: `[${pin.pin}] ${pin.name}`,
-          icon: pin.type == 'DIGITAL_OUTPUT' ? 'images/outputIcon.png' : 'images/inputIcon.png'
-        })
-        pokeys[pokeyIndex].pins[pinIndex].nodeId = pinId
-        pokeys[pokeyIndex].pins[pinIndex].parentNodeId = pinParentId
+    if (pokey.pins !== undefined && pokey.pins.length > 0) {
+      _.each(pokey.pins, (pin) => {
+        var newPin = device.addPin(pin)
+        if (newPin !== undefined) {
+          // var pinNodeId = $deviceTree.jstree().create_node(pokeyTreePinParentNodeId, newPin.getTreeNode())
+          // newPin.setNodeTreeId(pinNodeId)
+        }
       })
     }
+
+    if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
+      // var pokeyTreeEncoderParentNodeId = $deviceTree.jstree().create_node(
+      //   pokeyTreeNodeId, {
+      //     'text': `Encoders (${pokey.encoders.length}/8)`,
+      //     'icon': 'images/rotarysIcon.png'
+      //   })
+      _.each(pokey.encoders, (encoder) => {
+        var newEncoder = device.addEncoder(encoder)
+      // if (newEncoder !== undefined) {
+      //   var encoderNodeId = $deviceTree.jstree().create_node(pokeyTreeEncoderParentNodeId, newEncoder.getTreeNode())
+      //   newEncoder.setNodeTreeId(encoderNodeId)
+      // }
+      })
+    }
+
+    pokeys.push(device)
   })
+
+  deviceTree.render(pokeys)
 
   $('.topPanel').resizable({
     handleSelector: '.splitter',

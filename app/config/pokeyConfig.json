@@ -20,6 +20,44 @@
           "description": "Left FWD fuel pump indicator",
           "type": "DIGITAL_OUTPUT"
         }
+      ],
+      "encoders": [{
+          "encoder": 2,
+          "type": "fast",
+          "name": "V_OH_FLTALT",
+          "description": "Testing encoder",
+          "units": "feet",
+          "min": 0,
+          "max": 45000,
+          "default": 10000,
+          "step": 100,
+          "invertDirection": 1
+        },
+        {
+          "encoder": 3,
+          "type": "fast",
+          "name": "ANOTHER ENCODER",
+          "description": "Testing encoder",
+          "units": "feet",
+          "min": 0,
+          "max": 45000,
+          "default": 10000,
+          "step": 100,
+          "invertDirection": 1
+        },
+        {
+          "encoder": 5,
+          "type": "normal",
+          "name": "V_OH_ENCODER",
+          "description": "Testing encoder",
+          "units": "feet",
+          "min": 0,
+          "max": 45000,
+          "default": 10000,
+          "step": 100,
+          "invertDirection": 1,
+          "pins": [51, 52]
+        }
       ]
     },
     {
@@ -37,7 +75,19 @@
           "description": "Left FWD fuel pump indicator",
           "type": "DIGITAL_OUTPUT"
         }
-      ]
+      ],
+      "encoders": [{
+        "encoder": 4,
+        "type": "ufast",
+        "name": "UF_ENCODER",
+        "description": "Testing encoder",
+        "units": "feet",
+        "min": 0,
+        "max": 45000,
+        "default": 10000,
+        "step": 100,
+        "invertDirection": 1
+      }]
     }
   ]
 }
