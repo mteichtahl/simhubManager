@@ -35,6 +35,9 @@ class PokeyPin {
       case 'DIGITAL_INPUT_ENCODER':
         this.disabled = true
         return 'images/rotaryIcon.png'
+      case 'DIGITAL_OUTPUT_DISPLAY':
+        this.disabled = true
+        return 'images/displayIcon.png'
     }
   }
 

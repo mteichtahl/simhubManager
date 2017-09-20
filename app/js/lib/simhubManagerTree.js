@@ -30,7 +30,49 @@ class SimhubManagerTree extends Tree {
 
       if (pokey.encoders !== undefined && pokey.encoders.length > 0)
         self.renderEncoders(pokey.encoders, pokeyTreeNodeId)
+
+      if (pokey.displays !== undefined && pokey.displays.length > 0)
+        self.renderDisplays(pokey.displays, pokeyTreeNodeId)
     })
+  }
+
+  renderDisplays (displays, parentNodeId) {
+    var self = this
+    var pokeyTreeDisplayParentName = self.addNode(
+      parentNodeId, {
+        'text': `Displays (${displays.length})`,
+        'icon': 'images/displaysIcon.png'
+      })
+
+    _.each(displays, (display, index) => {
+      var self = this
+      var pokeyTreeDisplayParentNodeId = self.addNode(
+        pokeyTreeDisplayParentName, {
+          'text': `${display.name}`,
+          'icon': 'images/displaysIcon.png'
+        })
+
+      display.tree.parentNodeId = '#'
+      display.tree.nodeId = pokeyTreeDisplayParentNodeId
+
+      if (display.displayGroups !== undefined && display.displayGroups.length > 0) {
+        _.each(display.displayGroups, (displayGroup) => {
+          self.renderDisplayGroup(displayGroup, pokeyTreeDisplayParentNodeId)
+        })
+      }
+    })
+  }
+
+  renderDisplayGroup (group, parentNodeId) {
+    var self = this
+    var groupNodeId = self.addNode(
+      parentNodeId, {
+        'text': `${group.name}`,
+        'icon': 'images/displaysIcon.png'
+      })
+
+    group.tree.parentNodeId = parentNodeId
+    group.tree.nodeId = groupNodeId
   }
 
   /**

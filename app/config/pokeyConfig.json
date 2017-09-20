@@ -87,7 +87,44 @@
         "default": 10000,
         "step": 100,
         "invertDirection": 1
-      }]
+      }],
+      "displays": [{
+          "type": "microdriver",
+          "name": "Display 1",
+          "description": "lower display",
+          "enabled": 1,
+          "groups": [{
+              "name": "group-1",
+              "digits": 2,
+              "position": 0
+            },
+            {
+              "name": "group-2",
+              "digits": 3,
+              "position": 2
+            },
+            {
+              "name": "group-3",
+              "digits": 3,
+              "position": 5
+            }
+          ]
+        },
+        {
+          "type": "microdriver",
+          "name": "Display 2",
+          "enabled": 1,
+          "groups": [{
+            "name": "group-1",
+            "digits": 2,
+            "position": 0
+          }, {
+            "name": "group-2",
+            "digits": 3,
+            "position": 2
+          }]
+        }
+      ]
     }
   ]
 }

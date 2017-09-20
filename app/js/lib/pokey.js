@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const {PokeyPin} = require('./pokeyPin')
 const {PokeyEncoder} = require('./pokeyEncoder')
+const {PokeyDisplay} = require('./pokeyDisplay')
 
 class Pokey {
   constructor (name) {
@@ -10,6 +11,7 @@ class Pokey {
     this.serialNumber = undefined
     this.pins = []
     this.encoders = []
+    this.displays = []
 
     this.tree = {}
     this.tree.parentNodeId = undefined
@@ -97,6 +99,37 @@ class Pokey {
             break
       }
       alert(`Cant add encoder ${encoder.name} on pins ${pinText}`)
+      return undefined
+    }
+  }
+
+  addDisplay (data, index) {
+    var self = this
+    var isFree = false
+    var blockPins = []
+    var display = new PokeyDisplay(data)
+
+    if (index == 0 && this.isPinFree(9) && this.isPinFree(10) && this.isPinFree(11)) {
+      isFree = true
+      blockPins.push({ pin: 9, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+      blockPins.push({ pin: 10, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+      blockPins.push({ pin: 11, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+    } else if (index == 1 && this.isPinFree(23) && this.isPinFree(24) && this.isPinFree(25)) {
+      isFree = true
+      blockPins.push({ pin: 23, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+      blockPins.push({ pin: 24, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+      blockPins.push({ pin: 25, name: data.name, type: 'DIGITAL_OUTPUT_DISPLAY', description: `Display ${data.name}` })
+    }
+
+    if (isFree) {
+      this.addPin(blockPins[0])
+      this.addPin(blockPins[1])
+      this.addPin(blockPins[2])
+      display.setParentNodeTreeId(this.tree.nodeId)
+      this.displays.push(display)
+      return display
+    } else {
+      alert('cant add display ' + display.name)
       return undefined
     }
   }

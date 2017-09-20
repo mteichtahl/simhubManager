@@ -29,60 +29,42 @@ ipc.send('get-api-data', {
 $(function () {
   let deviceTree = new SimhubManagerTree($('#jstree_demo_div'))
 
-  _.each(pokeysConfig, function (pokey, pokeyIndex) {
-    var device = new Pokey(pokey.name)
-    device.setSerialNumber(pokey.serialNumber)
-
-    if (pokey.pins !== undefined && pokey.pins.length > 0) {
-      _.each(pokey.pins, (pin) => {
-        var newPin = device.addPin(pin)
-        if (newPin !== undefined) {
-          // var pinNodeId = $deviceTree.jstree().create_node(pokeyTreePinParentNodeId, newPin.getTreeNode())
-          // newPin.setNodeTreeId(pinNodeId)
-        }
-      })
-    }
-
-    if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
-      // var pokeyTreeEncoderParentNodeId = $deviceTree.jstree().create_node(
-      //   pokeyTreeNodeId, {
-      //     'text': `Encoders (${pokey.encoders.length}/8)`,
-      //     'icon': 'images/rotarysIcon.png'
-      //   })
-      _.each(pokey.encoders, (encoder) => {
-        var newEncoder = device.addEncoder(encoder)
-      // if (newEncoder !== undefined) {
-      //   var encoderNodeId = $deviceTree.jstree().create_node(pokeyTreeEncoderParentNodeId, newEncoder.getTreeNode())
-      //   newEncoder.setNodeTreeId(encoderNodeId)
-      // }
-      })
-    }
-
-    pokeys.push(device)
-  })
-
+  loadConfig(pokeysConfig)
   deviceTree.render(pokeys)
 
   $('.topPanel').resizable({
     handleSelector: '.splitter',
     resizeHeight: true
   })
-
-// $deviceTree.bind('loading.jstree', function (e, data) {
-//   log.info('Device tree loading....')
-// })
-//   .bind('load_all.jstree', function (e, data) {
-//     log.info('Device tree loaded')
-//   })
-//   .bind('ready.jstree', function (e, data) {
-//     log.info('Device tree ready')
-//   })
-//   .bind('hover_node.jstree', function (e, data) {
-//     console.log(data)
-//     log.info('hovering')
-//   })
 })
 
+function loadConfig (config) {
+  _.each(config, function (pokey, pokeyIndex) {
+    var device = new Pokey(pokey.name)
+
+    device.setSerialNumber(pokey.serialNumber)
+
+    if (pokey.pins !== undefined && pokey.pins.length > 0) {
+      _.each(pokey.pins, (pin, index) => {
+        var newPin = device.addPin(pin)
+      })
+    }
+
+    if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
+      _.each(pokey.encoders, (encoder, index) => {
+        var newEncoder = device.addEncoder(encoder)
+      })
+    }
+
+    if (pokey.displays !== undefined && pokey.displays.length > 0) {
+      _.each(pokey.displays, (display, index) => {
+        var newDisplay = device.addDisplay(display, index)
+      })
+    }
+
+    pokeys.push(device)
+  })
+}
 var graph = new joint.dia.Graph
 
 var paper = new joint.dia.Paper({
