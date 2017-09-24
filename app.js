@@ -1,8 +1,6 @@
 const electron = require('electron')
-const {
-  app,
-  Menu
-} = require('electron')
+const {remote} = require('electron')
+const {app, Menu} = require('electron')
 const settings = require('electron-settings')
 var ipc = require('electron').ipcMain
 let rp = require('request-promise')
@@ -21,23 +19,25 @@ const path = require('path')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let quickStartWindow
 
 log.transports.file.level = false
 log.transports.console.format = '{h}:{i}:{s}:{ms} [{level}] {text}'
 
-function createWindow() {
+function createWindow () {
   log.info('Creating main window')
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1350,
     height: 800,
+    center: true,
     'min-width': 500,
     'min-height': 200,
     'accept-first-mouse': true,
     'title-bar-style': 'hidden'
   })
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   mainWindow.loadURL(
@@ -65,6 +65,36 @@ app.on('ready', () => {
   log.info('Application is ready')
   log.info('api url - ' + settings.get('api.url'))
   createWindow()
+
+  if (settings.get('quickStart', true)) {
+    log.info('Using quickStart')
+    // Create the browser window.
+    quickStartWindow = new BrowserWindow({
+      width: 750,
+      height: 600,
+      'min-width': 500,
+      'min-height': 200,
+      'accept-first-mouse': true,
+      'title-bar-style': 'hidden',
+      resize: false,
+      parent: mainWindow,
+      minimizable: false,
+      maximizable: false,
+      center: true,
+      frame: false
+    })
+
+    quickStartWindow.webContents.openDevTools()
+
+    // and load the index.html of the app.
+    quickStartWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname + /app/, 'quickStart.html'),
+        protocol: 'file:',
+        slashes: true
+      })
+    )
+  }
 })
 
 // Quit when all windows are closed.
@@ -90,7 +120,6 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 settings.setPath('app/config/config.json')
-console.log('settings', settings.file())
 
 ipc.on('get-api-data', function (event, arg) {
   var requestId = guid.raw()
@@ -108,10 +137,49 @@ ipc.on('get-api-data', function (event, arg) {
   rp(options)
     .then(function (data) {
       var self = this
-      log.info(`[${options.requestId}] Completed fetch for ${arg.from} - ${options.uri} `)
+      log.info(
+        `[${options.requestId}] Completed fetch for ${arg.from} - ${options.uri} `
+      )
       event.sender.send('api-data', data)
     })
     .catch(function (err) {
       // API call failed...
     }) // do child process or other data manipulation and name it manData
+})
+
+ipc.on('open-config-dialog', function (event, arg) {
+  log.info('Opening config window')
+  var configWindow = new BrowserWindow({
+    parent: mainWindow,
+    frame: true,
+    // modal: true,
+    width: 650,
+    height: 500,
+    'min-width': 500,
+    'min-height': 200,
+    'accept-first-mouse': true,
+    'title-bar-style': 'hidden'
+  })
+  configWindow.webContents.openDevTools()
+
+  configWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname + /app/, 'configDialog.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  )
+
+  // Emitted when the window is closed.
+  configWindow.on('closed', function () {
+    log.info('Closing config window')
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  })
+})
+
+ipc.on('close-quick-start', (event, arg) => {
+  quickStartWindow.close()
 })

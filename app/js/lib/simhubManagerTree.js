@@ -5,8 +5,12 @@ const { Tree } = require('./tree')
 
 class SimhubManagerTree extends Tree {
 
-  constructor (el) {
-    super(el)
+  constructor (data) {
+    super(data.el)
+    this.rootNode = this.addNode('#', {
+      'text': data.name,
+      'icon': 'images/simhubIcon.png'
+    })
   }
 
   /**
@@ -17,7 +21,7 @@ class SimhubManagerTree extends Tree {
     var self = this
 
     _.each(data, function (pokey, index) {
-      var pokeyTreeNodeId = self.addNode('#', {
+      var pokeyTreeNodeId = self.addNode(self.rootNode, {
         'text': `${pokey.name} (${pokey.serialNumber})`,
         'icon': 'images/pokeyIcon.png'
       })

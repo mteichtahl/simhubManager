@@ -23,15 +23,37 @@
       <div class="toolbar-actions">
         <div class="btn-group">
           <button class="btn btn-default">
-            <span class="icon icon-download"></span>
+            <span class="icon icon-cog"></span>
           </button>
+
         </div>
+        <button id="configButton" class="btn btn-default pull-right">
+          <span class="icon icon-cog"></span>
+        </button>
       </div>
     </header>
     <div class="window-content">
       <div class="pane-group">
         <div id="sidebar" class="pane-sm sidebar containerPanel" style="width: 20%">
-
+          <div class="toolbar-actions">
+            <div class="btn-group">
+              <button class="btn btn-default">
+                <span class="icon icon-home"></span>
+              </button>
+              <button class="btn btn-default">
+                <span class="icon icon-folder"></span>
+              </button>
+              <button class="btn btn-default active">
+                <span class="icon icon-cloud"></span>
+              </button>
+              <button class="btn btn-default">
+                <span class="icon icon-popup"></span>
+              </button>
+              <button class="btn btn-default">
+                <span class="icon icon-shuffle"></span>
+              </button>
+            </div>
+          </div>
           <div class="topPanel" id="jstree_demo_div"></div>
           <div class="splitter"></div>
           <div id="properties" class="bottomPanel">
@@ -45,9 +67,9 @@
         </div>
       </div>
     </div>
-    <footer class="toolbar toolbar-footer ">
+    <!-- <footer class="toolbar toolbar-footer ">
       <h1 class="title ">Footer</h1>
-    </footer>
+    </footer> -->
   </div>
 
   <script src="js/index.js " charset="utf-8 "></script>

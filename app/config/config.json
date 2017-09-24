@@ -1,5 +1,6 @@
 {
   "test": "This is a test",
+  "quickStart": true,
   "api": {
     "url": "http://localhost",
     "port": "3000"

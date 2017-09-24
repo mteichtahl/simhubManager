@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Config</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/photon.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+
+  <!-- Javascript -->
+</head>
+
+<body>
+  <div class="window">
+    <div class="window-content" style="padding:20px;">
+      <div style="width:100% !important">
+        <h2 style="text-align:center">Welcome to simHub</h2>
+        <hr>
+        <div class="pull-left" style="border-right: 1px solid rgba(205, 208, 222, 1);">
+          <div id="connectToSimhubButton" style="margin:50px">
+            <img src="images/connectIcon.png" class="pull-left" style="padding-right:20px" />
+            <h4>Attach to a simHub</h4>
+            <p style="margin-top:-10px">Connect to a simHub over the network...</p>
+            <input id="simhubUrl" style="position:absolute;width:25%;margin-top:-5px;display:none" type="url" class="form-control" placeholder="http://127.0.0.1:3000">
+            <button id="simhubUrlGoButton" style="display:none;margin-top:-5px;" class="btn-large pull-right btn btn-primary">Go</button>
+          </div>
+          <div id="newSimhubButton" style="margin:50px;">
+            <img src="images/newConfigIcon.png" class="pull-left" style="padding-right:20px" />
+            <h4>Create a new configuration</h4>
+            <p style="margin-top:-10px">Start building your next configuration...</p>
+          </div>
+          <div id="loadSimhubButton" style="margin:50px">
+            <img src="images/loadConfigIcon.png" class="pull-left" style="padding-right:20px" />
+            <h4> Load an existing configuration</h4>
+            <p style="margin-top:-10px">Load and existing configuration...</p>
+          </div>
+        </div>
+        <div>
+          <div></div>
+          <h4 style="padding-left:20px">Recents</h4>
+        </div>
+      </div>
+
+    </div>
+    <footer class="toolbar toolbar-footer">
+      <div class="toolbar-actions">
+        <button id="quickStartCloseButton" class="btn btn-primary pull-right"> Close </button>
+      </div>
+    </footer>
+  </div>
+  <script src="js/quickStart.js " charset="utf-8 "></script>
+
+</body>
+
+</html>

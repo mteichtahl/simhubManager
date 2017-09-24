@@ -32,7 +32,8 @@
     "remote": "^0.2.6",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "util": "^0.10.3"
+    "util": "^0.10.3",
+    "validator": "^8.2.0"
   },
   "devDependencies": {
     "electron-devtools-installer": "^2.2.0",
