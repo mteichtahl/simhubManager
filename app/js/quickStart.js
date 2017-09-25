@@ -1,35 +1,62 @@
 const ipc = require('electron').ipcRenderer
 const log = require('electron').remote.getGlobal('log')
+const settings = require('electron').remote.getGlobal('settings')
 const $ = jQuery = require('jquery')
 const _ = require('lodash')
 const validator = require('validator')
+const moment = require('moment')
 
 const loaded = 'quickStart.js'
 log.info(`${loaded}`)
 
+var renderRecents = function () {
+  var index = 0
+  _.each(settings.get('recent'), function (recent, index) {
+    var $list = $('#recents')
+    $list.append(`<span data-index="${index}" class="recents hoverText"> <h4  style="margin-bottom:-5px !important;">${recent.data}</h4> <span> ${moment(recent.ts).local().format('DD-MM-YY HH:mm:ss')}</span><br>`)
+    index++
+  })
+}
+
 $(function () {
+  renderRecents()
+
+  $('.recents').on('click', (event) => {
+    var index = $(event.target).parent().data('index')
+    var recent = settings.get('recent')[index]
+  })
+
   $('#quickStartCloseButton').on('click', function (e) {
     log.info('click')
-    ipc.send('close-quick-start', { from: 'quickStart' })
+
+    ipc.send('close-quick-start', {
+      from: 'quickStart'
+    })
   })
 
   $('#connectToSimhubButton').on('click', function (e) {
-    log.info('connectToSimhubButton')
     $('#simhubUrl').show()
+    $('#simhubUrlGoButton').show()
 
     $('#simhubUrl').keyup(function () {
       var value = $(this).val()
-      if (validator.isURL(value, { protocols: ['http', 'https'] })) {
-        $('#simhubUrlGoButton').show()
+      if (validator.isURL(value, {
+          protocols: ['http', 'https']
+        }) || value == 'localhost') {
+        $('#simhubUrlGoButton').removeAttr('disabled')
       } else {
-        $('#simhubUrlGoButton').hide()
+        $('#simhubUrlGoButton').attr('disabled', 'disabled')
       }
     })
   })
 
   $('#simhubUrlGoButton').on('click', function () {
-    console.log('checking reachability')
-    console.log('triggering load')
+    var url = $('#simhubUrl').val()
+    ipc.send('simhubUrlGoButton', url)
+  })
+
+  ipc.on('api-data', (event, data) => {
+    console.log(data)
   })
 
   $('#newSimhubButton').on('click', function (e) {

@@ -41,3 +41,7 @@
   max-width: 300px !important;
   min-width: 200px !important;
 }
+
+.hoverText:hover {
+  color: #64ADF5
+}

@@ -1,12 +1,15 @@
 const electron = require('electron')
 const {remote} = require('electron')
 const {app, Menu} = require('electron')
-const settings = require('electron-settings')
-var ipc = require('electron').ipcMain
+
+const URL = require('url-parse')
 let rp = require('request-promise')
 let guid = require('guid')
+let ipc = require('electron').ipcMain
+let _ = require('underscore')
 
 global.log = require('electron-log')
+global.settings = require('electron-settings')
 
 let util = require('util')
 
@@ -26,6 +29,7 @@ log.transports.console.format = '{h}:{i}:{s}:{ms} [{level}] {text}'
 
 function createWindow () {
   log.info('Creating main window')
+  global.settings = settings
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -71,7 +75,7 @@ app.on('ready', () => {
     // Create the browser window.
     quickStartWindow = new BrowserWindow({
       width: 750,
-      height: 600,
+      height: 500,
       'min-width': 500,
       'min-height': 200,
       'accept-first-mouse': true,
@@ -80,7 +84,6 @@ app.on('ready', () => {
       parent: mainWindow,
       minimizable: false,
       maximizable: false,
-      center: true,
       frame: false
     })
 
@@ -121,65 +124,128 @@ app.on('activate', function () {
 
 settings.setPath('app/config/config.json')
 
-ipc.on('get-api-data', function (event, arg) {
+// ipc.on('get-api-data', function (event, arg) {
+//   var requestId = guid.raw()
+//   log.info(`[${requestId}] ${arg.from} fetching ${arg.path} from API `)
+
+//   var options = {
+//     uri: `${settings.get ('api.url')}:${settings.get ('api.port')}/${arg.path}`,
+//     headers: {
+//       'User-Agent': 'Request-Promise'
+//     },
+//     json: true,
+//     requestId: requestId
+//   }
+
+//   rp(options)
+//     .then(function (data) {
+//       var self = this
+//       log.info(
+//         `[${options.requestId}] Completed fetch for ${arg.from} - ${options.uri} `
+//       )
+//       event.sender.send('api-data', data)
+//     })
+//     .catch(function (err) {
+//       // API call failed...
+//     }) // do child process or other data manipulation and name it manData
+// })
+
+// ipc.on('open-config-dialog', function (event, arg) {
+//   log.info('Opening config window')
+//   var configWindow = new BrowserWindow({
+//     parent: mainWindow,
+//     frame: true,
+//     // modal: true,
+//     width: 650,
+//     height: 500,
+//     'min-width': 500,
+//     'min-height': 200,
+//     'accept-first-mouse': true,
+//     'title-bar-style': 'hidden'
+//   })
+//   configWindow.webContents.openDevTools()
+
+//   configWindow.loadURL(
+//     url.format({
+//       pathname: path.join(__dirname + /app/, 'configDialog.html'),
+//       protocol: 'file:',
+//       slashes: true
+//     })
+//   )
+
+//   // Emitted when the window is closed.
+//   configWindow.on('closed', function () {
+//     log.info('Closing config window')
+//     // Dereference the window object, usually you would store windows
+//     // in an array if your app supports multi windows, this is the time
+//     // when you should delete the corresponding element.
+//     mainWindow = null
+//   })
+// })
+
+ipc.on('close-quick-start', (event, arg) => {
+  quickStartWindow.close()
+})
+
+function addToRecent (data) {
+  var recent = settings.get('recent')
+  if (recent.length <= 3)
+    recent.push(data)
+  else
+    recent[0] = data
+
+  return _.sortBy(recent, 'ts')
+}
+
+function callAPI (params, cb) {
+  console.log(params)
   var requestId = guid.raw()
-  log.info(`[${requestId}] ${arg.from} fetching ${arg.path} from API `)
+  log.info(`[${requestId}] ${params.from} fetching ${params.path} from API `)
 
   var options = {
-    uri: `${settings.get ('api.url')}:${settings.get ('api.port')}/${arg.path}`,
+    uri: `${params.host}/${params.path}`,
     headers: {
       'User-Agent': 'Request-Promise'
     },
     json: true,
-    requestId: requestId
+    requestId: requestId,
+    from: params.from,
+    host: params.host,
+    path: params.path
   }
 
   rp(options)
     .then(function (data) {
       var self = this
       log.info(
-        `[${options.requestId}] Completed fetch for ${arg.from} - ${options.uri} `
+        `[${options.requestId}] Completed fetch for ${options.from} - ${options.uri} `
       )
-      event.sender.send('api-data', data)
+      cb(data)
     })
     .catch(function (err) {
-      // API call failed...
-    }) // do child process or other data manipulation and name it manData
-})
+      console.log('FAILED', err)
+    }) // 
+}
 
-ipc.on('open-config-dialog', function (event, arg) {
-  log.info('Opening config window')
-  var configWindow = new BrowserWindow({
-    parent: mainWindow,
-    frame: true,
-    // modal: true,
-    width: 650,
-    height: 500,
-    'min-width': 500,
-    'min-height': 200,
-    'accept-first-mouse': true,
-    'title-bar-style': 'hidden'
-  })
-  configWindow.webContents.openDevTools()
+ipc.on('simhubUrlGoButton', function (event, data) {
+  var self = this
+  var requestId = guid.raw()
+  var parsedURL = new URL(data)
+  var url = parsedURL.protocol + '//' + parsedURL.hostname
+  var port = parsedURL.port != '' ? parsedURL.port : 3000
+  var host = url + ':' + port
 
-  configWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname + /app/, 'configDialog.html'),
-      protocol: 'file:',
-      slashes: true
+  settings
+    .set('api.url', url, {prettify: true})
+    .set('api.port', port, { prettify: true })
+
+  callAPI({ from: 'app', host: host, path: 'pokeys' },
+    function (data) {
+      event.sender.send('api-data', data)
+      settings.set('recent', addToRecent({
+        type: 'url',
+        data: data,
+        ts: new Date().getTime()
+      }))
     })
-  )
-
-  // Emitted when the window is closed.
-  configWindow.on('closed', function () {
-    log.info('Closing config window')
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
-})
-
-ipc.on('close-quick-start', (event, arg) => {
-  quickStartWindow.close()
 })
