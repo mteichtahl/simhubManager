@@ -45,3 +45,25 @@
 .hoverText:hover {
   color: #64ADF5
 }
+
+#sidebar .btn-group .btn,
+#sidebar .btn-group .btn+.btn {
+  border: 0px;
+  border-radius: 0;
+}
+
+#sidebar .icon {
+  color: black;
+}
+
+#sidebar button.active .icon {
+  color: #64ADF5;
+}
+
+#sidebar .btn-group .active {
+  background-color: transparent !important;
+}
+
+#sidebar .icon {
+  font-size: 19px;
+}

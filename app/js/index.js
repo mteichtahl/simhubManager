@@ -14,27 +14,27 @@ log.info(`${loaded}`)
 
 let pokeysConfig = []
 let pokeys = []
+let deviceTree = undefined
 
 ipc.on('api-data', function (event, val) {
+  log.info('index - on[api-data]')
+  pokeysConfig = []
   _.each(val, function (data) {
     pokeysConfig.push(data)
   })
-})
 
-ipc.send('get-api-data', {
-  path: 'pokeys',
-  from: 'index'
+  loadConfig(pokeysConfig)
+  deviceTree.render(pokeys)
+  deviceTree.expand('#')
 })
 
 $(function () {
-  $('#configButton').on('click', function (e) {
+  $('#indexOpenButton').on('click', function (e) {
     console.log('click')
-    ipc.send('open-config-dialog', {from: 'index'})
+    ipc.send('openQuickStartDialog', {from: 'index'})
   })
 
-  // let deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name: 'simhub' })
-  // loadConfig(pokeysConfig)
-  // deviceTree.render(pokeys)
+  deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name: 'simhub' })
 
   $('.topPanel').resizable({
     handleSelector: '.splitter',

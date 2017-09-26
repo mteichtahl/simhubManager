@@ -58,6 +58,22 @@ class Tree {
 
   onHover (e, data) {
     // console.log(e, data)
+
+  }
+
+  getNode (id) {
+    return this.tree.jstree().get_node(id)
+  }
+
+  openNode (node) {
+    this.tree.jstree().open_node(node)
+  }
+
+  expand (id) {
+    var root = this.getNode(id)
+    console.log(root)
+    var top = root.children[0]
+    this.openNode(top)
   }
 }
 

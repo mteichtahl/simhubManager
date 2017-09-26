@@ -13,25 +13,34 @@ var renderRecents = function () {
   var index = 0
   _.each(settings.get('recent'), function (recent, index) {
     var $list = $('#recents')
-    $list.append(`<span data-index="${index}" class="recents hoverText"> <h4  style="margin-bottom:-5px !important;">${recent.data}</h4> <span> ${moment(recent.ts).local().format('DD-MM-YY HH:mm:ss')}</span><br>`)
-    index++
+    $list.append(`<span class="hoverText"> <span data-index="${index++}" class="recentsList" style="font-weight: 700;margin-bottom:-5px !important;">${recent.data}</span><br><span data-index="${index++}" class="recentsList"> ${moment(recent.ts).local().format('DD-MM-YY HH:mm:ss')}</span></span><br><br>`)
   })
 }
+
+ipc.on('api-data', (event, data) => {
+  console.log(data)
+})
+
+
 
 $(function () {
   renderRecents()
 
-  $('.recents').on('click', (event) => {
-    var index = $(event.target).parent().data('index')
-    var recent = settings.get('recent')[index]
-  })
-
   $('#quickStartCloseButton').on('click', function (e) {
-    log.info('click')
-
     ipc.send('close-quick-start', {
       from: 'quickStart'
     })
+  })
+
+  $('.recentsList').on('click', (event) => {
+    var index = $(event.target).data('index')
+    var recent = settings.get('recent')[index]
+
+    if (recent.type == "url") {
+      ipc.send('simhubUrlGoButton', recent.data)
+    }
+
+
   })
 
   $('#connectToSimhubButton').on('click', function (e) {
@@ -55,20 +64,14 @@ $(function () {
     ipc.send('simhubUrlGoButton', url)
   })
 
-  ipc.on('api-data', (event, data) => {
-    console.log(data)
-  })
-
   $('#newSimhubButton').on('click', function (e) {
     log.info('newSimhubButton')
     $('#simhubUrl').hide().val('')
     $('#simhubUrlGoButton').hide()
-
     $('#simhubUrl').val('')
   })
 
   $('#loadSimhubButton').on('click', function (e) {
-    log.info('loadSimhubButton')
     $('#simhubUrl').hide().val('')
     $('#simhubUrlGoButton').hide()
   })

@@ -41,7 +41,7 @@ function createWindow () {
     'accept-first-mouse': true,
     'title-bar-style': 'hidden'
   })
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   mainWindow.loadURL(
@@ -62,6 +62,38 @@ function createWindow () {
   })
 }
 
+function openQuickStartDialog () {
+  quickStartWindow = new BrowserWindow({
+    width: 750,
+    height: 500,
+    'min-width': 500,
+    'min-height': 200,
+    'accept-first-mouse': true,
+    'title-bar-style': 'hidden',
+    resize: false,
+    parent: mainWindow,
+    minimizable: false,
+    maximizable: false,
+    frame: false
+  })
+
+  quickStartWindow.webContents.openDevTools()
+
+  // and load the index.html of the app.
+  quickStartWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname + /app/, 'quickStart.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  )
+
+  quickStartWindow.on('closed', function () {
+    log.info('Closing quick start window')
+    quickStartWindow = null
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -72,31 +104,7 @@ app.on('ready', () => {
 
   if (settings.get('quickStart', true)) {
     log.info('Using quickStart')
-    // Create the browser window.
-    quickStartWindow = new BrowserWindow({
-      width: 750,
-      height: 500,
-      'min-width': 500,
-      'min-height': 200,
-      'accept-first-mouse': true,
-      'title-bar-style': 'hidden',
-      resize: false,
-      parent: mainWindow,
-      minimizable: false,
-      maximizable: false,
-      frame: false
-    })
-
-    quickStartWindow.webContents.openDevTools()
-
-    // and load the index.html of the app.
-    quickStartWindow.loadURL(
-      url.format({
-        pathname: path.join(__dirname + /app/, 'quickStart.html'),
-        protocol: 'file:',
-        slashes: true
-      })
-    )
+    openQuickStartDialog()
   }
 })
 
@@ -123,32 +131,6 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 settings.setPath('app/config/config.json')
-
-// ipc.on('get-api-data', function (event, arg) {
-//   var requestId = guid.raw()
-//   log.info(`[${requestId}] ${arg.from} fetching ${arg.path} from API `)
-
-//   var options = {
-//     uri: `${settings.get ('api.url')}:${settings.get ('api.port')}/${arg.path}`,
-//     headers: {
-//       'User-Agent': 'Request-Promise'
-//     },
-//     json: true,
-//     requestId: requestId
-//   }
-
-//   rp(options)
-//     .then(function (data) {
-//       var self = this
-//       log.info(
-//         `[${options.requestId}] Completed fetch for ${arg.from} - ${options.uri} `
-//       )
-//       event.sender.send('api-data', data)
-//     })
-//     .catch(function (err) {
-//       // API call failed...
-//     }) // do child process or other data manipulation and name it manData
-// })
 
 // ipc.on('open-config-dialog', function (event, arg) {
 //   log.info('Opening config window')
@@ -185,6 +167,10 @@ settings.setPath('app/config/config.json')
 
 ipc.on('close-quick-start', (event, arg) => {
   quickStartWindow.close()
+})
+
+ipc.on('openQuickStartDialog', (event, arg) => {
+  openQuickStartDialog()
 })
 
 function addToRecent (data) {
@@ -240,12 +226,14 @@ ipc.on('simhubUrlGoButton', function (event, data) {
     .set('api.port', port, { prettify: true })
 
   callAPI({ from: 'app', host: host, path: 'pokeys' },
-    function (data) {
-      event.sender.send('api-data', data)
+    function (apiData) {
+      event.sender.send('api-data', apiData)
       settings.set('recent', addToRecent({
         type: 'url',
         data: data,
         ts: new Date().getTime()
       }))
+      quickStartWindow.close()
+      mainWindow.webContents.send('api-data', apiData)
     })
 })
