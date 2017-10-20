@@ -1,3 +1,5 @@
+const APP_IPC = require('./ipc-messages.js')
+
 const ipc = require('electron').ipcRenderer
 const log = require('electron').remote.getGlobal('log')
 const $ = jQuery = require('jquery')
@@ -7,7 +9,7 @@ const joint = require('jointjs')
 const { Pokey } = require('./js/lib/pokey')
 const { SimhubManagerTree } = require('./js/lib/simhubManagerTree')
 
-var {PokeyShape} = require('./js/lib/pokeyShape')
+var { PokeyShape } = require('./js/lib/pokeyShape')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)
@@ -16,8 +18,10 @@ let pokeysConfig = []
 let pokeys = []
 let deviceTree = undefined
 
-ipc.on('api-data', function (event, val) {
+ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
   log.info('index - on[api-data]')
+  deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name: 'simhub' })
+  
   pokeysConfig = []
   _.each(val, function (data) {
     pokeysConfig.push(data)
@@ -31,10 +35,8 @@ ipc.on('api-data', function (event, val) {
 $(function () {
   $('#indexOpenButton').on('click', function (e) {
     console.log('click')
-    ipc.send('openQuickStartDialog', {from: 'index'})
+    ipc.send(APP_IPC.IPCMSG_OPEN_QUICK_START, {from: 'index'})
   })
-
-  deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name: 'simhub' })
 
   $('.topPanel').resizable({
     handleSelector: '.splitter',
