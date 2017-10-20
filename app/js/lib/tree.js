@@ -58,7 +58,6 @@ class Tree {
 
   onHover (e, data) {
     // console.log(e, data)
-
   }
 
   getNode (id) {

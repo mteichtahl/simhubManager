@@ -34,7 +34,6 @@ class PokeyDisplayGroup {
       'icon': this.tree.icon
     }
   }
-
 }
 
 exports.PokeyDisplayGroup = PokeyDisplayGroup

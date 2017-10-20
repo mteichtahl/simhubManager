@@ -1,3 +1,5 @@
+const APP_IPC = require('./ipc-messages.js')
+
 const ipc = require('electron').ipcRenderer
 const log = require('electron').remote.getGlobal('log')
 const settings = require('electron').remote.getGlobal('settings')
@@ -17,19 +19,15 @@ var renderRecents = function () {
   })
 }
 
-ipc.on('api-data', (event, data) => {
+ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {
   console.log(data)
 })
-
-
 
 $(function () {
   renderRecents()
 
   $('#quickStartCloseButton').on('click', function (e) {
-    ipc.send('close-quick-start', {
-      from: 'quickStart'
-    })
+    ipc.send(APP_IPC.IPCMSG_CLOSE_QUICKSTART)
   })
 
   $('.recentsList').on('click', (event) => {
@@ -37,10 +35,8 @@ $(function () {
     var recent = settings.get('recent')[index]
 
     if (recent.type == "url") {
-      ipc.send('simhubUrlGoButton', recent.data)
+      ipc.send(APP_IPC.IPCMSG_OPEN_SIMHUB_CONFIG_URL, recent.data)
     }
-
-
   })
 
   $('#connectToSimhubButton').on('click', function (e) {
@@ -61,11 +57,11 @@ $(function () {
 
   $('#simhubUrlGoButton').on('click', function () {
     var url = $('#simhubUrl').val()
-    ipc.send('simhubUrlGoButton', url)
+    ipc.send(APP_IPC.IPCMSG_OPEN_SIMHUB_CONFIG_URL, url)
   })
 
   $('#newSimhubButton').on('click', function (e) {
-    log.info('newSimhubButton')
+    ipc.send(APP_IPC.IPCMSG_CREATE_SIMHUB_CONFIG)
     $('#simhubUrl').hide().val('')
     $('#simhubUrlGoButton').hide()
     $('#simhubUrl').val('')

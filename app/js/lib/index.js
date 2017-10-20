@@ -1,3 +1,5 @@
+const APP_IPC = require('./ipc-messages.js')
+
 const ipc = require('electron').ipcRenderer
 const log = require('electron').remote.getGlobal('log')
 const $ = jQuery = require('jquery')
@@ -15,13 +17,13 @@ log.info(`${loaded}`)
 let pokeysConfig = []
 let pokeys = []
 
-ipc.on('api-data', function (event, val) {
+ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
   _.each(val, function (data) {
     pokeysConfig.push(data)
   })
 })
 
-ipc.send('get-api-data', {
+ipc.send(APP_IPC.IPCMSG_CONFIG_URL_DATA, {
   path: 'pokeys',
   from: 'index'
 })
