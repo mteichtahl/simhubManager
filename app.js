@@ -99,14 +99,59 @@ function createDocumentWindow () {
   return documentWindow;
 }
 
-class PokeyConfigurationEditorController {
+/**
+ * This basic view controller class serves to provide shared
+ * controller functionality between the application controller
+ * and the various document controllers used by the pokey config
+ * editor application
+ */
+
+class ConfigurationViewController {
+  /**
+   * Invokes REST endpoint configured by @param
+   * @param {*} endpoint parameters (host, path) 
+   * @param {*} function to invoke when REST request complete
+   * @param {*} argument to pass through to completion callback 
+   */
+  callAPI (params, cb, callbackArg) {
+    console.log(params)
+    var requestId = guid.raw()
+    log.info(`[${requestId}] ${params.from} fetching ${params.path} from API `)
+  
+    var options = {
+      uri: `${params.host}/${params.path}`,
+      headers: {
+        'User-Agent': 'Request-Promise'
+      },
+      json: true,
+      requestId: requestId,
+      from: params.from,
+      host: params.host,
+      path: params.path
+    }
+  
+    rp(options)
+      .then(function (data) {
+        log.info(
+          `[${options.requestId}] Completed fetch for ${options.from} - ${options.uri} `
+        )
+        cb(callbackArg, data)
+      })
+      .catch(function (err) {
+        console.log('FAILED', err)
+      })
+  }
+}
+
+class PokeyConfigurationEditorController extends ConfigurationViewController {
   constructor() {
+    super()
     this.app = require('electron').app
 
     this.documentWindows = new Array()
     this.quickStartWindow = null
 
-    ipc.on(APP_IPC.IPCMSG_CLOSE_QUICK_START, this.onIPCCloseQuickStart.bind(this))
+    ipc.on(APP_IPC.IPCMSG_CLOSE_QUICKSTART, this.onIPCCloseQuickStart.bind(this))
     ipc.on(APP_IPC.IPCMSG_OPEN_QUICK_START, this.onIPCOpenQuickStartDialog.bind(this)) 
     ipc.on(APP_IPC.IPCMSG_OPEN_SIMHUB_CONFIG_URL, this.onIPCSimhubURLGoButton.bind(this))
     ipc.on(APP_IPC.IPCMSG_CREATE_SIMHUB_CONFIG, this.onIPCSimhubCreateNewButton.bind(this))
@@ -162,41 +207,6 @@ class PokeyConfigurationEditorController {
     return result
   }
 
-  /**
-   * Invokes REST endpoint configured by @param
-   * @param {*} endpoint parameters (host, path) 
-   * @param {*} function to invoke when REST request complete
-   * @param {*} argument to pass through to completion callback 
-   */
-  callAPI (params, cb, callbackArg) {
-    console.log(params)
-    var requestId = guid.raw()
-    log.info(`[${requestId}] ${params.from} fetching ${params.path} from API `)
-  
-    var options = {
-      uri: `${params.host}/${params.path}`,
-      headers: {
-        'User-Agent': 'Request-Promise'
-      },
-      json: true,
-      requestId: requestId,
-      from: params.from,
-      host: params.host,
-      path: params.path
-    }
-  
-    rp(options)
-      .then(function (data) {
-        log.info(
-          `[${options.requestId}] Completed fetch for ${options.from} - ${options.uri} `
-        )
-        cb(callbackArg, data)
-      })
-      .catch(function (err) {
-        console.log('FAILED', err)
-      })
-  }
-
   // -- event handlers
   
   // called when the config retrieval from the simhub instance has completed
@@ -214,7 +224,7 @@ class PokeyConfigurationEditorController {
     this.quickStartWindow.close()
   }
 
-  onIPCSimhubCreateNewButton(event, arg) {
+  onIPCSimhubCreateNewButton(event) {
     this.documentWindows.push(createDocumentWindow())
     this.quickStartWindow.close()
   }
@@ -234,14 +244,15 @@ class PokeyConfigurationEditorController {
 
     // request the configuration data from the given simhub instance
     this.callAPI({ from: 'app', host: host, path: 'pokeys' }, this.onSimhubOpenURLDone.bind(this), event)
+
     settings.set('recent', this.addToRecent({
       type: 'url',
       data: host,
       ts: new Date().getTime()
     }))
-}
+  }
 
-  onIPCCloseQuickStart(event, arg) {
+  onIPCCloseQuickStart(event) {
     this.quickStartWindow.close()  
   }
 
@@ -273,6 +284,8 @@ class PokeyConfigurationEditorController {
   onElectronAppWindowsAllClosed() {
       // On OS X it is common for applications and their menu bar
       // to stay active until the user quits explicitly with Cmd + Q
+      this.app.quit()
+      console.log('quitting')
   }
 }
 

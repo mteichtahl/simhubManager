@@ -23,15 +23,11 @@ ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {
   console.log(data)
 })
 
-
-
 $(function () {
   renderRecents()
 
   $('#quickStartCloseButton').on('click', function (e) {
-    ipc.send(APP_IPC.IPCMSG_CLOSE_QUICKSTART, {
-      from: 'quickStart'
-    })
+    ipc.send(APP_IPC.IPCMSG_CLOSE_QUICKSTART)
   })
 
   $('.recentsList').on('click', (event) => {
@@ -41,8 +37,6 @@ $(function () {
     if (recent.type == "url") {
       ipc.send(APP_IPC.IPCMSG_OPEN_SIMHUB_CONFIG_URL, recent.data)
     }
-
-
   })
 
   $('#connectToSimhubButton').on('click', function (e) {
@@ -67,7 +61,7 @@ $(function () {
   })
 
   $('#newSimhubButton').on('click', function (e) {
-    log.info('newSimhubButton')
+    ipc.send(APP_IPC.IPCMSG_CREATE_SIMHUB_CONFIG)
     $('#simhubUrl').hide().val('')
     $('#simhubUrlGoButton').hide()
     $('#simhubUrl').val('')
