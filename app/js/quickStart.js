@@ -25,7 +25,6 @@ var renderRecents =
     </span></span><br><br>`);
   })
 }
-
     ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {console.log(data)})
 
 $(function() {

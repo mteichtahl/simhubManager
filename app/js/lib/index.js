@@ -1,77 +1,72 @@
-const APP_IPC = require('./ipc-messages.js')
+const $ = jQuery = require('jquery');
 
-const ipc = require('electron').ipcRenderer
-const log = require('electron').remote.getGlobal('log')
-const $ = jQuery = require('jquery')
-const _ = require('lodash')
-const backbone = require('backbone')
-const joint = require('jointjs')
-const { Pokey } = require('./js/lib/pokey')
-const { SimhubManagerTree } = require('./js/lib/simhubManagerTree')
 
-var {PokeyShape} = require('./js/lib/pokeyShape')
+const APP_IPC = require('./ipc-messages.js');
+const ipc = require('electron').ipcRenderer;
+const log = require('electron').remote.getGlobal('log');
+const _ = require('lodash');
+const backbone = require('backbone');
+const joint = require('jointjs');
+const {Pokey} = require('./js/lib/pokey');
+const {SimhubManagerTree} = require('./js/lib/simhubManagerTree');
 
-var loaded = 'index.js'
-log.info(`${loaded}`)
+var {PokeyShape} = require('./js/lib/pokeyShape');
 
-let pokeysConfig = []
-let pokeys = []
+var loaded = 'index.js';
+log.info(`${loaded}`);
 
-ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
-  _.each(val, function (data) {
-    pokeysConfig.push(data)
+let pokeysConfig = [];
+let pokeys = [];
+
+ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function(event, val) {
+  _.each(val, function(data) {
+    pokeysConfig.push(data);
   })
 })
 
-ipc.send(APP_IPC.IPCMSG_CONFIG_URL_DATA, {
-  path: 'pokeys',
-  from: 'index'
-})
+ipc.send(APP_IPC.IPCMSG_CONFIG_URL_DATA, {path: 'pokeys', from: 'index'});
 
-$(function () {
-  $('#configButton').on('click', function (e) {
-    console.log('click')
-    ipc.send('open-config-dialog', {from: 'index'})
+$(function() {
+  $('#configButton').on('click', function(e) {
+    console.log('click');
+    ipc.send(APP_IPC.IPCMSG_OPEN_CONFIG_DIALOG, {from: 'index'});
   })
 
-  // let deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name: 'simhub' })
-  // loadConfig(pokeysConfig)
-  // deviceTree.render(pokeys)
+  // let deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name:
+  // 'simhub' }) loadConfig(pokeysConfig) deviceTree.render(pokeys)
 
-  $('.topPanel').resizable({
-    handleSelector: '.splitter',
-    resizeHeight: true
-  })
+  $('.topPanel').resizable({handleSelector: '.splitter', resizeHeight: true})
 })
 
-function loadConfig (config) {
-  _.each(config, function (pokey, pokeyIndex) {
-    var device = new Pokey(pokey.name)
+function loadConfig(config) {
+  _.each(config, function(pokey, pokeyIndex) {
+    var device = new Pokey(pokey.name);
 
-    device.setSerialNumber(pokey.serialNumber)
+    device.setSerialNumber(pokey.serialNumber);
 
     if (pokey.pins !== undefined && pokey.pins.length > 0) {
       _.each(pokey.pins, (pin, index) => {
-        var newPin = device.addPin(pin)
+        var newPin = device.addPin(pin);
       })
     }
 
     if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
       _.each(pokey.encoders, (encoder, index) => {
-        var newEncoder = device.addEncoder(encoder)
+        var newEncoder = device.addEncoder(encoder);
       })
     }
 
     if (pokey.displays !== undefined && pokey.displays.length > 0) {
       _.each(pokey.displays, (display, index) => {
-        var newDisplay = device.addDisplay(display, index)
+        var newDisplay = device.addDisplay(display, index);
       })
     }
 
     pokeys.push(device)
   })
-}
-var graph = new joint.dia.Graph
+};
+
+var graph = new joint.dia.Graph;
 
 var paper = new joint.dia.Paper({
   el: $('#diagram'),
@@ -79,26 +74,20 @@ var paper = new joint.dia.Paper({
   height: '600',
   model: graph,
   gridSize: 1,
-  defaultLink: new joint.dia.Link({
-    attrs: {
-      '.marker-target': {
-        d: 'M 10 0 L 0 5 L 10 10 z'
-      }
-    }
-  }),
-  validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+  defaultLink: new joint.dia.Link(
+      {attrs: {'.marker-target': {d: 'M 10 0 L 0 5 L 10 10 z'}}}),
+  validateConnection: function(
+      cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
     // Prevent linking from input ports.
     if (magnetS && magnetS.getAttribute('port-group') === 'in') return false
-    // Prevent linking from output ports to input ports within one element.
-    if (cellViewS === cellViewT) return false
-    // Prevent linking to input ports.
-    return magnetT && magnetT.getAttribute('port-group') === 'in'
+      // Prevent linking from output ports to input ports within one element.
+      if (cellViewS === cellViewT) return false
+      // Prevent linking to input ports.
+      return magnetT && magnetT.getAttribute('port-group') === 'in'
   },
-  snapLinks: {
-    radius: 75
-  },
+  snapLinks: {radius: 75},
   markAvailable: true
-})
+});
 
 // const shape = new PokeyShape({
 //   name: 'pokey_2',
