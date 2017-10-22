@@ -1,6 +1,6 @@
-const APP_IPC = require('./ipc-messages.js')
+const APP_IPC = require('./ipc-messages.js');
 
-    const ipc = require('electron').ipcRenderer
+const ipc = require('electron').ipcRenderer;
 const log = require('electron').remote.getGlobal('log');
 const settings = require('electron').remote.getGlobal('settings');
 const $ = jQuery = require('jquery');
@@ -12,8 +12,7 @@ const moment = require('moment');
 const loaded = 'quickStart.js';
 log.info(`${loaded}`);
 
-var renderRecents =
-    function() {
+var renderRecents = function() {
   var index = 0;
   _.each(settings.get('recent'), function(recent, index) {
     var $list = $('#recents');
@@ -24,11 +23,11 @@ var renderRecents =
     ${moment(recent.ts).local().format('DD-MM-YY HH:mm:ss')}
     </span></span><br><br>`);
   })
-}
-    ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {console.log(data)})
+};
+ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {console.log(data)})
 
 $(function() {
-  renderRecents()
+  renderRecents();
 
   $('#quickStartCloseButton').on('click', function(e) {
     ipc.send(APP_IPC.IPCMSG_CLOSE_QUICKSTART)

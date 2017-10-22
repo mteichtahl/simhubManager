@@ -131,6 +131,7 @@ class PokeyConfigurationEditorController extends ConfigurationViewController {
         APP_IPC.IPCMSG_CREATE_SIMHUB_CONFIG,
         this.onIPCSimhubCreateNewButton.bind(this));
 
+
     this.app.on('ready', this.onElectronAppReady.bind(this));
     this.app.on('activate', this.onElectronAppActivate.bind(this));
     this.app.on(

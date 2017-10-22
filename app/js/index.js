@@ -39,17 +39,23 @@ $(function() {
     ipc.send(APP_IPC.IPCMSG_OPEN_QUICK_START, {from: 'index'})
   })
 
+
+
   $('.topPanel').resizable({handleSelector: '.splitter', resizeHeight: true})
+
+
 })
 
 function loadConfig(config) {
   _.each(config, function(pokey, pokeyIndex) {
-    var device = new Pokey(pokey.name)
+    var device = new Pokey(pokey.name);
 
-    device.setSerialNumber(pokey.serialNumber)
+    device.setSerialNumber(pokey.serialNumber);
 
-        if (pokey.pins !== undefined && pokey.pins.length > 0) {
-      _.each(pokey.pins, (pin, index) => {var newPin = device.addPin(pin)})
+    if (pokey.pins !== undefined && pokey.pins.length > 0) {
+      _.each(pokey.pins, (pin, index) => {
+        var newPin = device.addPin(pin);
+      })
     }
 
     if (pokey.encoders !== undefined && pokey.encoders.length > 0) {

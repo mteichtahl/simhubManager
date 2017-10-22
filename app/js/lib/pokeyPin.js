@@ -1,61 +1,60 @@
 'use strict'
 
-const _ = require('lodash')
-const guid = require('guid')
+const _ = require('lodash');
+const guid = require('guid');
 
 class PokeyPin {
-  constructor (data) {
-    this.name = data.name
-    this.description = data.description
-    this.pin = data.pin
-    this.type = data.type
-    this.disabled = false
+  constructor(data) {
+    console.log(data);
+    this.name = data.name;
+    this.description = data.description;
+    this.pin = data.pin;
+    this.type = data.type;
+    this.disabled = false;
+    this.inverted = data.inverted;
 
-    if (data.default !== undefined)
-      this.default = data.default
+    if (data.default !== undefined) {
+      this.default = data.default;
+    }
 
-    this.tree = {}
-    this.tree.parentNodeId = undefined
-    this.tree.nodeId = undefined
-    this.tree.icon = this._getIcon()
+    this.tree = {};
+    this.tree.parentNodeId = undefined;
+    this.tree.nodeId = undefined;
+    this.tree.icon = this._getIcon();
   }
 
-  _getIcon () {
+  _getIcon() {
     switch (this.type) {
       case 'DIGITAL_OUTPUT':
-        return 'images/outputIcon.png'
+        return 'images/outputIcon.png';
       case 'DIGITAL_INPUT':
-        return 'images/inputIcon.png'
+        return 'images/inputIcon.png';
       case 'DIGITAL_INPUT_ENCODER_UFAST':
-        this.disabled = true
-        return 'images/rotaryUfastIcon.png'
+        this.disabled = true;
+        return 'images/rotaryUfastIcon.png';
       case 'DIGITAL_INPUT_ENCODER_FAST':
-        this.disabled = true
-        return 'images/rotaryFastIcon.png'
+        this.disabled = true;
+        return 'images/rotaryFastIcon.png';
       case 'DIGITAL_INPUT_ENCODER':
-        this.disabled = true
-        return 'images/rotaryIcon.png'
+        this.disabled = true;
+        return 'images/rotaryIcon.png';
       case 'DIGITAL_OUTPUT_DISPLAY':
-        this.disabled = true
-        return 'images/displayIcon.png'
+        this.disabled = true;
+        return 'images/displayIcon.png';
     }
   }
 
-  setParentNodeTreeId (parent) {
-    this.tree.parentNodeId = parent
+  setParentNodeTreeId(parent) {
+    this.tree.parentNodeId = parent;
   }
 
-  setNodeTreeId (nodeId) {
-    this.tree.nodeId = nodeId
+  setNodeTreeId(nodeId) {
+    this.tree.nodeId = nodeId;
   }
 
-  getTreeNode () {
-    return {
-      'text': `[${this.pin}] ${this.name}`,
-      'icon': this.tree.icon
-    }
+  getTreeNode() {
+    return {'text': `[${this.pin}] ${this.name}`, 'icon': this.tree.icon};
   }
-
 }
 
-exports.PokeyPin = PokeyPin
+exports.PokeyPin = PokeyPin;

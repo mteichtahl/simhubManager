@@ -1,7 +1,9 @@
 'use strict'
-
 const _ = require('lodash');
+const APP_IPC = require('../../ipc-messages.js');
 const {Tree} = require('./tree');
+const ipc = require('electron').ipcRenderer;
+const log = require('electron').remote.getGlobal('log');
 
 class SimhubManagerTree extends Tree {
   constructor(data) {
@@ -67,9 +69,11 @@ class SimhubManagerTree extends Tree {
 
   renderDisplayGroup(group, parentNodeId) {
     var self = this;
-    var groupNodeId = self.addNode(
-        parentNodeId,
-        {'text': `${group.name}`, 'icon': 'images/displaysIcon.png'});
+    var groupNodeId = self.addNode(parentNodeId, {
+      'text': `${group.name}`,
+      'icon': 'images/displaysIcon.png',
+      data: group
+    });
 
     group.tree.parentNodeId = parentNodeId;
     group.tree.nodeId = groupNodeId;
@@ -100,7 +104,7 @@ class SimhubManagerTree extends Tree {
     var self = this;
     var nodeId = self.addNode(
         parentNodeId,
-        {'text': `[${pin.pin}] ${pin.name}`, 'icon': pin.tree.icon})
+        {'text': `[${pin.pin}] ${pin.name}`, 'icon': pin.tree.icon, data: pin})
     pin.tree.nodeId = nodeId;
     pin.tree.parentNodeId = parentNodeId;
     if (pin.disabled) {
@@ -118,7 +122,7 @@ class SimhubManagerTree extends Tree {
 
     var pokeyTreeEncoderParentNodeId = self.addNode(parentNodeId, {
       'text': `Encoders (${encoders.length}/8)`,
-      'icon': 'images/rotarysIcon.png'
+      'icon': 'images/rotarysIcon.png',
     });
 
     _.each(encoders, (encoder) => {
@@ -129,13 +133,21 @@ class SimhubManagerTree extends Tree {
   renderEncoder(encoder, parentNodeId) {
     var self = this;
     var nodeId = self.addNode(
-        parentNodeId, {'text': `${encoder.name}`, 'icon': encoder.tree.icon});
+        parentNodeId,
+        {'text': `${encoder.name}`, 'icon': encoder.tree.icon, data: encoder});
     encoder.tree.nodeId = nodeId;
     encoder.tree.parentNodeId = parentNodeId;
   }
 
   onSelectNode(node, selected, event) {
-    console.log(selected);
+    var self = this;
+    var node = this.getNode(selected.node.id);
+
+    console.log(node);
+
+    $('#propertiesHeading').text(node.data.name);
+    $('#propertiesDescription')
+        .text(node.data.description ? node.data.description : '');
   }
 }
 

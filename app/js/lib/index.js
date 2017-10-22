@@ -1,6 +1,4 @@
 const $ = jQuery = require('jquery');
-
-
 const APP_IPC = require('./ipc-messages.js');
 const ipc = require('electron').ipcRenderer;
 const log = require('electron').remote.getGlobal('log');
@@ -31,9 +29,6 @@ $(function() {
     console.log('click');
     ipc.send(APP_IPC.IPCMSG_OPEN_CONFIG_DIALOG, {from: 'index'});
   })
-
-  // let deviceTree = new SimhubManagerTree({ el: $('#jstree_demo_div'), name:
-  // 'simhub' }) loadConfig(pokeysConfig) deviceTree.render(pokeys)
 
   $('.topPanel').resizable({handleSelector: '.splitter', resizeHeight: true})
 })

@@ -1,8 +1,8 @@
 'use strict'
 
-const _ = require('lodash')
+const _ = require('lodash');
 
-    class Tree {
+class Tree {
   constructor(el) {
     var self = this;
     this.tree = el;
@@ -40,7 +40,7 @@ const _ = require('lodash')
             })
         .bind('select_node.jstree', function(e, data) {
           self.onSelectNode(e, data);
-        })
+        });
   }
 
   addNode(parent, data) {
@@ -66,7 +66,7 @@ const _ = require('lodash')
   }
 
   onHover(e, data) {
-    console.log(e, data);
+    // console.log(e, data);
   }
 
   getNode(id) {
@@ -79,7 +79,6 @@ const _ = require('lodash')
 
   expand(id) {
     var root = this.getNode(id);
-    console.log(root);
     var top = root.children[0];
     this.openNode(top);
   }

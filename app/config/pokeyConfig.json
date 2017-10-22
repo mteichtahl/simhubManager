@@ -12,6 +12,7 @@
           "pin": 2,
           "name": "I_OH_FUEL_PUMP_LF",
           "description": "Left FWD fuel pump indicator",
+          "inverted": true,
           "type": "DIGITAL_OUTPUT"
         },
         {
