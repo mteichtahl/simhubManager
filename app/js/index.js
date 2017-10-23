@@ -18,6 +18,10 @@ let pokeysConfig = []
 let pokeys = []
 let deviceTree = undefined
 
+/**
+ *  Configure the system based on the URL provided
+ *  and create the main UI deviceTree and expand it
+ */
 ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
   log.info('index - on[api-data]')
   deviceTree =
@@ -33,9 +37,12 @@ ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
   deviceTree.expand('#')
 })
 
+/**
+ *  Render out the digital input and digital output (pins)
+ *  into the properties section of the main config screen
+ */
 ipc.on(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, function (event, node) {
   var pinEditableTable = new PinEditableTable(node, pokeys[node.pokeyIndex])
-
   $('#properties').html(pinEditableTable.render())
   $('.isEditable').editable()
 })
@@ -51,6 +58,11 @@ $(function () {
   $('.topPanel').resizable({handleSelector: '.splitter', resizeHeight: true})
 })
 
+/**
+ * Load the system configuration from the JSON config supplied
+ *
+ * @param {*} config 
+ */
 function loadConfig (config) {
   _.each(config, function (pokey, pokeyIndex) {
     var device = new Pokey(pokey.name, pokeyIndex)
@@ -103,44 +115,44 @@ var paper = new joint.dia.Paper({
   markAvailable: true
 })
 
-// const shape = new PokeyShape({
-//   name: 'pokey_2',
-//   description: 'electrical Panel',
-//   position: { x: 450, y: 100 }
-// })
+const shape = new PokeyShape({
+  name: 'pokey_2',
+  description: 'electrical Panel',
+  position: { x: 450, y: 100 }
+})
 
-// const shape2 = new PokeyShape({
-//   name: 'pokey_1',
-//   description: 'electrical Panel',
-//   position: { x: 450, y: 100 }
-// })
+const shape2 = new PokeyShape({
+  name: 'pokey_1',
+  description: 'electrical Panel',
+  position: { x: 450, y: 100 }
+})
 
-// shape.addTo(graph)
-//   .addPort({ name: '1', direction: 'in' })
-//   .addPort({ name: '2', direction: 'in' })
-//   .addPort({ name: '3', direction: 'in' })
-//   .addPort({ name: 'out', direction: 'out' })
-//   .addPort({ name: 'wee', direction: 'out' })
-//   .addPort({ name: 'poo', direction: 'out' })
-//   .addPort({ name: 'kaka', direction: 'out' })
-//   .addPort({ name: 'poopoo', direction: 'out' })
-//   .addPort({ name: 'kakaka', direction: 'out' })
-//   .addPort({ name: 'weewee', direction: 'out' })
-//   .addPort({ name: 'sasa', direction: 'out' })
-//   .addPort({ name: 'a', direction: 'out' })
-//   .addPort({ name: 'b', direction: 'out' })
+shape.addTo(graph)
+  .addPort({ name: '1', direction: 'in' })
+  .addPort({ name: '2', direction: 'in' })
+  .addPort({ name: '3', direction: 'in' })
+  .addPort({ name: 'out', direction: 'out' })
+  .addPort({ name: 'wee', direction: 'out' })
+  .addPort({ name: 'poo', direction: 'out' })
+  .addPort({ name: 'kaka', direction: 'out' })
+  .addPort({ name: 'poopoo', direction: 'out' })
+  .addPort({ name: 'kakaka', direction: 'out' })
+  .addPort({ name: 'weewee', direction: 'out' })
+  .addPort({ name: 'sasa', direction: 'out' })
+  .addPort({ name: 'a', direction: 'out' })
+  .addPort({ name: 'b', direction: 'out' })
 
-// shape2.addTo(graph)
-//   .addPort({ name: '1', direction: 'in' })
-//   .addPort({ name: '2', direction: 'in' })
-//   .addPort({ name: '3', direction: 'in' })
-//   .addPort({ name: 'out', direction: 'out' })
-//   .addPort({ name: 'wee', direction: 'out' })
-//   .addPort({ name: 'poo', direction: 'out' })
-//   .addPort({ name: 'kaka', direction: 'out' })
-//   .addPort({ name: 'poopoo', direction: 'out' })
-//   .addPort({ name: 'kakaka', direction: 'out' })
-//   .addPort({ name: 'weewee', direction: 'out' })
-//   .addPort({ name: 'sasa', direction: 'out' })
-//   .addPort({ name: 'a', direction: 'out' })
-//   .addPort({ name: 'b', direction: 'out' })
+shape2.addTo(graph)
+  .addPort({ name: '1', direction: 'in' })
+  .addPort({ name: '2', direction: 'in' })
+  .addPort({ name: '3', direction: 'in' })
+  .addPort({ name: 'out', direction: 'out' })
+  .addPort({ name: 'wee', direction: 'out' })
+  .addPort({ name: 'poo', direction: 'out' })
+  .addPort({ name: 'kaka', direction: 'out' })
+  .addPort({ name: 'poopoo', direction: 'out' })
+  .addPort({ name: 'kakaka', direction: 'out' })
+  .addPort({ name: 'weewee', direction: 'out' })
+  .addPort({ name: 'sasa', direction: 'out' })
+  .addPort({ name: 'a', direction: 'out' })
+  .addPort({ name: 'b', direction: 'out' })

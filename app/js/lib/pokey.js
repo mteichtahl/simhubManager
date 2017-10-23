@@ -35,7 +35,7 @@ class Pokey {
   freePins () {
     var free = []
     for (var i = 1; i <= 55;i++) {
-      if (this.isPinFree(i - 1)) {
+      if (this.isPinFree(i)) {
         free.push(i)
       }
     }
