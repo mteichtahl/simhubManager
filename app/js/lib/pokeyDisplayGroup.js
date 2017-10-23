@@ -5,7 +5,6 @@ const guid = require('guid')
 
 class PokeyDisplayGroup {
   constructor (data) {
-    console.log(data)
     this.name = data.name
     this.digits = data.digits
     this.position = data.position

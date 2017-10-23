@@ -46,7 +46,8 @@
   color: #64ADF5
 }
 
-#sidebar .btn-group .btn, #sidebar .btn-group .btn+.btn {
+#sidebar .btn-group .btn,
+#sidebar .btn-group .btn+.btn {
   border: 0px;
   border-radius: 0;
 }
@@ -65,4 +66,9 @@
 
 #sidebar .icon {
   font-size: 19px;
+}
+
+.isEditable {
+  border-bottom: none !important;
+  color: black !important;
 }
