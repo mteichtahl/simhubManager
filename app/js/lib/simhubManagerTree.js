@@ -106,7 +106,11 @@ class SimhubManagerTree extends Tree {
     var self = this
     var nodeId = self.addNode(
       parentNodeId,
-      {'text': `[${pin.pin}] ${pin.name}`, 'icon': pin.tree.icon, data: pin})
+      {
+        'text': `[${pin.pin}] ${pin.name}`,
+        'icon': pin.tree.icon,
+        data: pin
+      })
     pin.tree.nodeId = nodeId
     pin.tree.parentNodeId = parentNodeId
     if (pin.disabled) {
@@ -136,7 +140,11 @@ class SimhubManagerTree extends Tree {
     var self = this
     var nodeId = self.addNode(
       parentNodeId,
-      {'text': `${encoder.name}`, 'icon': encoder.tree.icon, data: encoder})
+      {
+        'text': `${encoder.name}`,
+        'icon': encoder.tree.icon,
+        data: encoder
+      })
     encoder.tree.nodeId = nodeId
     encoder.tree.parentNodeId = parentNodeId
   }
@@ -144,6 +152,7 @@ class SimhubManagerTree extends Tree {
   onSelectNode (node, selected, event) {
     var self = this
     var node = this.getNode(selected.node.id)
+    console.log(node)
     ipc.send(APP_IPC.IPCMSG_UPDATE_PROPERTIES, node)
   }
 }

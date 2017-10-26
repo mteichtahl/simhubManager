@@ -10,6 +10,7 @@ const {Pokey} = require('./js/lib/pokey')
 const {SimhubManagerTree} = require('./js/lib/simhubManagerTree')
 const { PokeyShape } = require('./js/lib/pokeyShape')
 const {PinEditableTable} = require('./js/lib/pinEditableTable')
+const {EncoderEditableTable} = require('./js/lib/encoderEditableTable')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)
@@ -47,6 +48,12 @@ ipc.on(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, function (event, node) {
   $('.isEditable').editable()
 })
 
+ipc.on(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, function (event, node) {
+  var encoderEditableTable = new EncoderEditableTable(node, pokeys[node.pokeyIndex])
+  $('#properties').html(encoderEditableTable.render())
+  $('.isEditable').editable()
+})
+
 $(function () {
   // Tell x-editable to use inline
   $.fn.editable.defaults.mode = 'inline'
@@ -66,20 +73,18 @@ $(function () {
 function loadConfig (config) {
   _.each(config, function (pokey, pokeyIndex) {
     var device = new Pokey(pokey.name, pokeyIndex)
-
     device.setSerialNumber(pokey.serialNumber)
 
     if (pokey.pins !== undefined && pokey.pins.length > 0) {
-      _.each(pokey.pins, (pin, index) => {
+      _.each(pokey.pins, function (pin, index) {
         var newPin = device.addPin(pin)
       })
     }
 
     if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
-      _.each(
-        pokey.encoders,
-        (encoder, index) => {
-          var newEncoder = device.addEncoder(encoder)})
+      _.each(pokey.encoders, function (encoder, index) {
+        var newEncoder = device.addEncoder(encoder)
+      })
     }
 
     if (pokey.displays !== undefined && pokey.displays.length > 0) {

@@ -150,10 +150,13 @@ class PokeyConfigurationEditorController extends ConfigurationViewController {
   }
 
   onUpdateProperties (event, node) {
-    var type = node.data.type
+    var type = (node.data.type).toUpperCase()
 
     if (type == 'DIGITAL_INPUT' || type == 'DIGITAL_OUTPUT') {
       event.sender.send(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, node.data)
+    }
+    if (type == 'FAST' || type == 'NORMAL' || type == 'UFAST') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, node.data)
     }
   }
 

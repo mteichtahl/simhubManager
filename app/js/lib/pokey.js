@@ -32,10 +32,24 @@ class Pokey {
     return _.find(this.pins, { pin: pinNumber }) == undefined ? true : false
   }
 
+  isEncoderFree (encoderNumber) {
+    return _.find(this.encoders, { number: encoderNumber }) == undefined ? true : false
+  }
+
   freePins () {
     var free = []
     for (var i = 1; i <= 55;i++) {
       if (this.isPinFree(i)) {
+        free.push(i)
+      }
+    }
+    return free
+  }
+
+  freeEncoders () {
+    var free = []
+    for (var i = 1; i <= 5;i++) {
+      if (this.isEncoderFree(i)) {
         free.push(i)
       }
     }
@@ -53,7 +67,7 @@ class Pokey {
   }
 
   addEncoder (data) {
-    var encoder = new PokeyEncoder(data)
+    var encoder = new PokeyEncoder(data, this.index)
     var isFree = false
     var blockPins = []
 

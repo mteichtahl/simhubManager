@@ -6,5 +6,6 @@ module.exports = {
   IPCMSG_CREATE_SIMHUB_CONFIG: 'create-simhub-config',
   IPCMSG_CONFIG_URL_DATA: 'api-data',
   IPCMSG_UPDATE_PROPERTIES: 'update-properties',
-  IPCMSG_RENDER_DIO_PROPERTIES: 'render-properties'
+  IPCMSG_RENDER_DIO_PROPERTIES: 'render-dio-properties',
+  IPCMSG_RENDER_ENCODER_PROPERTIES: 'render-encoder-properties'
 }

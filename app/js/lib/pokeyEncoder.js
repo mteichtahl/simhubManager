@@ -4,7 +4,7 @@ const _ = require('lodash')
 const guid = require('guid')
 
 class PokeyEncoder {
-  constructor (data) {
+  constructor (data, pokeyIndex) {
     this.name = data.name
     this.description = data.description
     this.type = data.type
@@ -16,6 +16,7 @@ class PokeyEncoder {
     this.min = data.min
     this.units = data.units
     this.pins = data.pins
+    this.pokeyIndex = pokeyIndex
 
     this.tree = {}
     this.tree.parentNodeId = undefined
@@ -47,6 +48,10 @@ class PokeyEncoder {
       'text': `${this.name}`,
       'icon': this.tree.icon
     }
+  }
+
+  getPokeyIndex () {
+    return this.pokeyIndex
   }
 
 }
