@@ -3,7 +3,7 @@ const _ = require('lodash')
 
 class EncoderEditableTable {
   constructor (data, pokey) {
-    console.log(data)
+    console.log('EncoderEditableTable', data)
     this.name = data.name
     this.type = data.type
     this.description = data.description || ''
@@ -11,6 +11,7 @@ class EncoderEditableTable {
     this.min = data.min
     this.max = data.max
     this.step = data.step
+    this.units = data.units
     this.default = data.default
     this.number = data.number
     this.inverted = data.inverted
@@ -31,9 +32,15 @@ class EncoderEditableTable {
     html += `<thead><tr><th><strong>Property</strong></th><th><strong>Value</strong></th></td></thead>`
     html += `<tbody>`
     html += `<tr><td>Encoder</td>`
-    html += `<td class="pull-right"><a class="isEditable" href="#" id="encoder" data-type="select" data-title="encoder" data-showbuttons="false" data-value='${this.number}' data-source='[${this.number},${this.pokey.freeEncoders()}]'></a></td></tr>`
-    html += `<tr><td>Type</td><td class="pull-right">`
-    html += `<a class="isEditable" href="#" id="type" data-type="select" data-title="type" data-showbuttons="false" data-value='${this.type}' data-source='[{value:"normal",text:"Normal"},{value:"ufast",text:"Ultra Fast"},{value:"fast",text:"Fast"}]'></a></td ></tr >`
+    html += `<td class="pull-right"><a class="isEditable" href="#" id="encoder" data-type="select" data-title="encoder" data-showbuttons="false" data-value='${this.number}' data-source='[${this.number},${this.pokey.freeEncoders()}]'></a></td>`
+    html += `<tr><td>Pins</td>`
+    html += `<td class="pull-right">${this.pins[0]},${this.pins[1]}</td></tr>`
+    html += `<tr><td>Type</td>`
+    html += `<td class="pull-right">${_.startCase(this.type)}</td></tr>`
+
+    html += `<tr><td>Units</td><td class="pull-right">`
+    html += `<a class="isEditable" href="#" id="units" data-type="text" data-title="units" data-showbuttons="false" data-value='${_.startCase(this.units)}'></a></td ></tr>`
+
     html += `<tr><td>Default</td><td class="pull-right">`
     html += `<a class="isEditable" href="#" id="default" data-type="text" data-title="default" data-showbuttons="false" data-value='${this.default}'></a></td ></tr>`
     html += `<tr><td>Minimum</td><td class="pull-right">`

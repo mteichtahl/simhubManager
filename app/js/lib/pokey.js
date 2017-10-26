@@ -67,6 +67,7 @@ class Pokey {
   }
 
   addEncoder (data) {
+    console.log('adding', data)
     var encoder = new PokeyEncoder(data, this.index)
     var isFree = false
     var blockPins = []
@@ -134,7 +135,7 @@ class Pokey {
         type: 'DIGITAL_INPUT_ENCODER_UFAST',
         description: `Encoder ${encoder.number}`
       })
-    } else if (
+    }  else if (
       encoder.type == 'normal' && this.isPinFree(data.pins[0]) &&
       this.isPinFree(data.pins[1])) {
       isFree = true
@@ -156,6 +157,7 @@ class Pokey {
       this.addPin(blockPins[0])
       this.addPin(blockPins[1])
       encoder.setParentNodeTreeId(this.tree.nodeId)
+      encoder.setPins([blockPins[0].pin, blockPins[1].pin])
       this.encoders.push(encoder)
       return encoder
     } else {

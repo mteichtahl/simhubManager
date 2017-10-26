@@ -152,7 +152,6 @@ class SimhubManagerTree extends Tree {
   onSelectNode (node, selected, event) {
     var self = this
     var node = this.getNode(selected.node.id)
-    console.log(node)
     ipc.send(APP_IPC.IPCMSG_UPDATE_PROPERTIES, node)
   }
 }
