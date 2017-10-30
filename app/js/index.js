@@ -11,6 +11,7 @@ const {SimhubManagerTree} = require('./js/lib/simhubManagerTree')
 const { PokeyShape } = require('./js/lib/pokeyShape')
 const {PinEditableTable} = require('./js/lib/pinEditableTable')
 const {EncoderEditableTable} = require('./js/lib/encoderEditableTable')
+const {DisplayEditableTable} = require('./js/lib/displayEditableTable')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)
@@ -29,7 +30,8 @@ ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, function (event, val) {
     new SimhubManagerTree({el: $('#jstree_demo_div'), name: 'simhub'})
 
   pokeysConfig = []
-  _.each(val, function (data) {
+
+  _.each(val.configuration, function (data) {
     pokeysConfig.push(data)
   })
 
@@ -52,6 +54,19 @@ ipc.on(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, function (event, node) {
   var encoderEditableTable = new EncoderEditableTable(node, pokeys[node.pokeyIndex])
   $('#properties').html(encoderEditableTable.render())
   $('.isEditable').editable()
+})
+
+ipc.on(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, function (event, node) {
+  var displayEditableTable = new DisplayEditableTable(node, pokeys[node.pokeyIndex])
+  $('#properties').html(displayEditableTable.render())
+  $('.isEditable').editable()
+})
+
+ipc.on(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, function (event, node) {
+  console.log('REDNER SERVOS')
+// var ser = new DisplayEditableTable(node, pokeys[node.pokeyIndex])
+// $('#properties').html(displayEditableTable.render())
+// $('.isEditable').editable()
 })
 
 $(function () {
@@ -88,13 +103,18 @@ function loadConfig (config) {
 
     if (pokey.encoders !== undefined && pokey.encoders.length > 0) {
       _.each(pokey.encoders, function (encoder, index) {
-        var newEncoder = device.addEncoder(encoder)
+        var newEncoder = device.addEncoder(encoder, index)
       })
     }
 
     if (pokey.displays !== undefined && pokey.displays.length > 0) {
       _.each(pokey.displays, (display, index) => {
         var newDisplay = device.addDisplay(display, index)})
+    }
+
+    if (pokey.servos !== undefined && pokey.servos.length > 0) {
+      _.each(pokey.servos, (servo, index) => {
+        var newServo = device.addServo(servo, index)})
     }
 
     pokeys.push(device)

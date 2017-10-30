@@ -36,8 +36,13 @@ class SimhubManagerTree extends Tree {
         self.renderEncoders(pokey.encoders, pokeyTreeNodeId)
       }
 
-      if (pokey.displays !== undefined && pokey.displays.length > 0)
+      if (pokey.displays !== undefined && pokey.displays.length > 0) {
         self.renderDisplays(pokey.displays, pokeyTreeNodeId)
+      }
+
+      if (pokey.servos !== undefined && pokey.servos.length > 0) {
+        self.renderServos(pokey.servos, pokeyTreeNodeId)
+      }
     })
   }
 
@@ -114,6 +119,44 @@ class SimhubManagerTree extends Tree {
     pin.tree.nodeId = nodeId
     pin.tree.parentNodeId = parentNodeId
     if (pin.disabled) {
+      self.disableNode(nodeId)
+    }
+  }
+
+  /**
+   * Render all servos
+   * @param {*} pins
+   * @param {*} parentNodeId
+   */
+  renderServos (servos, parentNodeId) {
+    var self = this
+
+    var pokeyTreePinParentNodeId = self.addNode(parentNodeId, {
+      'text': `Servos (${servos.length})`,
+      'icon': 'images/ioIcon.png'
+    })
+
+    _.each(servos, (servo) => {
+      self.renderServo(servo, pokeyTreePinParentNodeId)})
+  }
+
+  /**
+   * render a servo
+   * @param {*} servo
+   * @param {*} parentNodeId
+   */
+  renderServo (servo, parentNodeId) {
+    var self = this
+    var nodeId = self.addNode(
+      parentNodeId,
+      {
+        'text': `[${servo.channel}] ${servo.name}`,
+        'icon': servo.tree.icon,
+        data: servo
+      })
+    servo.tree.nodeId = nodeId
+    servo.tree.parentNodeId = parentNodeId
+    if (servo.disabled) {
       self.disableNode(nodeId)
     }
   }

@@ -4,6 +4,7 @@ const _ = require('lodash')
 const {PokeyPin} = require('./pokeyPin')
 const {PokeyEncoder} = require('./pokeyEncoder')
 const {PokeyDisplay} = require('./pokeyDisplay')
+const {PokeyServo} = require('./pokeyServo')
 
 class Pokey {
   constructor (name, index) {
@@ -13,6 +14,7 @@ class Pokey {
     this.pins = []
     this.encoders = []
     this.displays = []
+    this.servos = []
 
     this.tree = {}
     this.tree.parentNodeId = undefined
@@ -251,6 +253,16 @@ class Pokey {
       alert('cant add display ' + display.name)
       return undefined
     }
+  }
+
+  addServo (data, index) {
+    var self = this
+    var isFree = false
+    var blockPins = []
+    var servo = new PokeyServo(data, this.index)
+    this.servos.push(servo)
+    console.log('progress from here')
+    return servo
   }
 }
 
