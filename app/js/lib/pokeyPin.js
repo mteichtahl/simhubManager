@@ -41,6 +41,9 @@ class PokeyPin {
       case 'DIGITAL_OUTPUT_DISPLAY':
         this.disabled = true
         return 'images/displayIcon.png'
+      case 'DIGITAL_OUTPUT_PWM':
+        this.disabled = true
+        return 'images/servoIcon.png'
     }
   }
 

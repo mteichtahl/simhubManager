@@ -5,6 +5,7 @@ const guid = require('guid')
 
 class PokeyServo {
   constructor (data, pokeyIndex) {
+    console.log(data)
     this.name = data.name
     this.description = data.description || ''
     this.pin = data.pin
@@ -16,6 +17,7 @@ class PokeyServo {
     this.default = data.default
     this.type = data.type
     this.pokeyIndex = pokeyIndex
+    this.disabled = false
 
     if (data.default !== undefined) {
       this.default = data.default
@@ -28,10 +30,7 @@ class PokeyServo {
   }
 
   _getIcon () {
-    switch (this.type) {
-      case 'analog':
-        return 'images/outputIcon.png'
-    }
+    return 'images/servoIcon.png'
   }
 
   setParentNodeTreeId (parent) {
@@ -43,7 +42,7 @@ class PokeyServo {
   }
 
   getTreeNode () {
-    return {'text': `[${this.pin}] ${this.name}`, 'icon': this.tree.icon}
+    return {'text': `[${this.channel}] ${this.name}`, 'icon': this.tree.icon}
   }
 
   getPokeyIndex () {

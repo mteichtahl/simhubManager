@@ -133,7 +133,7 @@ class SimhubManagerTree extends Tree {
 
     var pokeyTreePinParentNodeId = self.addNode(parentNodeId, {
       'text': `Servos (${servos.length})`,
-      'icon': 'images/ioIcon.png'
+      'icon': 'images/servosIcon.png'
     })
 
     _.each(servos, (servo) => {

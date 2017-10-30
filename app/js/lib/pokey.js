@@ -38,6 +38,10 @@ class Pokey {
     return _.find(this.encoders, { number: encoderNumber }) == undefined ? true : false
   }
 
+  isPWMFree (PWMChannel) {
+    return _.find(this.servos, {channel: PWMChannel}) == undefined ? true : false
+  }
+
   freePins () {
     var free = []
     for (var i = 1; i <= 55;i++) {
@@ -58,6 +62,16 @@ class Pokey {
     return free
   }
 
+  freePWMs () {
+    var free = []
+    for (var i = 1; i <= 6;i++) {
+      if (this.isPWMFree(i)) {
+        free.push(i)
+      }
+    }
+    return free
+  }
+
   addPin (data) {
     if (this.isPinFree(data.pin)) {
       var pin = new PokeyPin(data, this.index)
@@ -69,7 +83,6 @@ class Pokey {
   }
 
   addEncoder (data) {
-    console.log('adding', data)
     var encoder = new PokeyEncoder(data, this.index)
     var isFree = false
     var blockPins = []
@@ -260,9 +273,65 @@ class Pokey {
     var isFree = false
     var blockPins = []
     var servo = new PokeyServo(data, this.index)
-    this.servos.push(servo)
-    console.log('progress from here')
-    return servo
+
+    if (data.channel == 1 && this.isPinFree(17)) {
+      isFree = true
+      blockPins.push({
+        pin: 17,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    } else if (data.channel == 2 && this.isPinFree(18)) {
+      isFree = true
+      blockPins.push({
+        pin: 18,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    } else if (data.channel == 3 && this.isPinFree(19)) {
+      isFree = true
+      blockPins.push({
+        pin: 19,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    } else if (data.channel == 4 && this.isPinFree(20)) {
+      isFree = true
+      blockPins.push({
+        pin: 20,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    } else if (data.channel == 5 && this.isPinFree(21)) {
+      isFree = true
+      blockPins.push({
+        pin: 21,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    } else if (data.channel == 6 && this.isPinFree(22)) {
+      isFree = true
+      blockPins.push({
+        pin: 22,
+        name: data.name,
+        type: 'DIGITAL_OUTPUT_PWM',
+        description: `Servo ${data.name}`
+      })
+    }
+    if (isFree) {
+      this.addPin(blockPins[0])
+      servo.setParentNodeTreeId(this.tree.nodeId)
+      this.servos.push(servo)
+      return servo
+    } else {
+      alert('cant add servo ' + servo.name)
+      return undefined
+    }
   }
 }
 

@@ -12,6 +12,7 @@ const { PokeyShape } = require('./js/lib/pokeyShape')
 const {PinEditableTable} = require('./js/lib/pinEditableTable')
 const {EncoderEditableTable} = require('./js/lib/encoderEditableTable')
 const {DisplayEditableTable} = require('./js/lib/displayEditableTable')
+const {ServoEditableTable} = require('./js/lib/servoEditableTable')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)
@@ -64,9 +65,9 @@ ipc.on(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, function (event, node) {
 
 ipc.on(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, function (event, node) {
   console.log('REDNER SERVOS')
-// var ser = new DisplayEditableTable(node, pokeys[node.pokeyIndex])
-// $('#properties').html(displayEditableTable.render())
-// $('.isEditable').editable()
+  var servoEditableTable = new ServoEditableTable(node, pokeys[node.pokeyIndex])
+  $('#properties').html(servoEditableTable.render())
+  $('.isEditable').editable()
 })
 
 $(function () {
