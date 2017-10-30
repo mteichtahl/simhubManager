@@ -157,6 +157,12 @@ class PokeyConfigurationEditorController extends ConfigurationViewController {
     if (type == 'FAST' || type == 'NORMAL' || type == 'UFAST') {
       event.sender.send(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, node.data)
     }
+    if (type == 'MICRODRIVER') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, node.data)
+    }
+    if (type == 'ANALOG') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, node.data)
+    }
   }
 
   // -- (re-)create the main quick start window
