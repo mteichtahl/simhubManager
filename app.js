@@ -98,8 +98,7 @@ class ConfigurationViewController {
     rp(options)
       .then(function (data) {
         log.info(
-          `[${options.requestId
-                    }] Completed fetch for ${options.from} - ${options.uri} `)
+          `[${options.requestId}] Completed fetch for ${options.from} - ${options.uri} `)
         cb(callbackArg, data)
       })
       .catch(function (err) {
