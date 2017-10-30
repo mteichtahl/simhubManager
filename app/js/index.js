@@ -93,11 +93,8 @@ function loadConfig (config) {
     }
 
     if (pokey.displays !== undefined && pokey.displays.length > 0) {
-      _.each(
-        pokey.displays,
-        (display,
-          index) => {
-          var newDisplay = device.addDisplay(display, index)})
+      _.each(pokey.displays, (display, index) => {
+        var newDisplay = device.addDisplay(display, index)})
     }
 
     pokeys.push(device)
