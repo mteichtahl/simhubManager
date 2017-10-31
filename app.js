@@ -1,241 +1,41 @@
-'use strict'
-const APP_IPC = require('./app/js/ipc-messages.js')
-const electron = require('electron')
-const { remote } = require('electron')
-var ApplicationViewController = require('./app/js/uiControllers/applicationViewController')
-let guid = require('guid')
+'use strict';
 
-const URL = require('url-parse')
 
-let ipc = require('electron').ipcMain
-let _ = require('underscore')
+const electron = require('electron');
+const { remote } = require('electron');
 
-global.log = require('electron-log')
-global.settings = require('electron-settings')
 
-let util = require('util')
+const guid = require('guid');
+const URL = require('url-parse');
+const url = require('url');
+const path = require('path');
+
+const _ = require('underscore');
+const util = require('util')
+
+const MainViewController = require('./app/js/uiControllers/mainViewController');
+
+global.log = require('electron-log');
+log.transports.file.level = false;
+log.transports.console.format = '{h}:{i}:{s}:{ms} [{level}] {text}';
+
+
+global.settings = require('electron-settings');
 
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const BrowserWindow = electron.BrowserWindow;
 
-const url = require('url')
-const path = require('path')
+settings.setPath('app/config/config.json');
 
-log.transports.file.level = false
-log.transports.console.format = '{h}:{i}:{s}:{ms} [{level}] {text}'
+  
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
 
-settings.setPath('app/config/config.json')
+/**
+ * Main application view controller
+ *
+ * @class MainViewController
+ * @extends {ApplicationViewController}
+ */
 
-function createDocumentWindow () {
-  log.info('Creating document window')
-  global.settings = settings
 
-  // Create the browser window
-  let documentWindow = new BrowserWindow({
-    width: 1350,
-    height: 800,
-    center: true,
-    'min-width': 500,
-    'min-height': 200,
-    'accept-first-mouse': true,
-    'title-bar-style': 'hidden'
-  })
-
-  documentWindow.webContents.openDevTools()
-
-  // and load the index.html of the app.
-  documentWindow.loadURL(url.format({
-    pathname: path.join(__dirname + /app/, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-
-  // Emitted when the window is closed.
-  documentWindow.on(
-    'closed',
-    function () {
-      log.info('Closing document window')
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      documentWindow = null
-    })
-
-  return documentWindow
-}
-
-class MainViewController extends ApplicationViewController {
-  constructor () {
-    super()
-    this.app = require('electron').app
-
-    this.documentWindows = []
-    this.quickStartWindow = null
-
-    ipc.on(
-      APP_IPC.IPCMSG_CLOSE_QUICKSTART, this.onIPCCloseQuickStart.bind(this))
-    ipc.on(
-      APP_IPC.IPCMSG_OPEN_QUICK_START,
-      this.onIPCOpenQuickStartDialog.bind(this))
-    ipc.on(
-      APP_IPC.IPCMSG_OPEN_SIMHUB_CONFIG_URL,
-      this.onIPCSimhubURLGoButton.bind(this))
-    ipc.on(
-      APP_IPC.IPCMSG_CREATE_SIMHUB_CONFIG,
-      this.onIPCSimhubCreateNewButton.bind(this))
-    ipc.on(
-      APP_IPC.IPCMSG_UPDATE_PROPERTIES,
-      this.onUpdateProperties.bind(this))
-
-    this.app.on('ready', this.onElectronAppReady.bind(this))
-    this.app.on('activate', this.onElectronAppActivate.bind(this))
-    this.app.on(
-      'window-all-closed', this.onElectronAppWindowsAllClosed.bind(this))
-  }
-
-  // udates MRU configuration data (used in quickstart jumpscreen)
-  addToRecent (data) {
-    var recent = settings.get('recent')
-    if (recent.length <= 3) {
-      recent.push(data)
-    } else {
-      recent[0] = data
-    }
-
-    return _.sortBy(recent, 'ts')
-  }
-
-  onUpdateProperties (event, node) {
-    var type = (node.data.type).toUpperCase()
-
-    if (type == 'DIGITAL_INPUT' || type == 'DIGITAL_OUTPUT') {
-      event.sender.send(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, node.data)
-    }
-    if (type == 'FAST' || type == 'NORMAL' || type == 'UFAST') {
-      event.sender.send(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, node.data)
-    }
-    if (type == 'MICRODRIVER') {
-      event.sender.send(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, node.data)
-    }
-    if (type == 'ANALOG') {
-      event.sender.send(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, node.data)
-    }
-  }
-
-  // -- (re-)create the main quick start window
-  openQuickStartDialog () {
-    let result = new BrowserWindow({
-      width: 750,
-      height: 500,
-      'min-width': 500,
-      'min-height': 200,
-      'accept-first-mouse': true,
-      'title-bar-style': 'hidden',
-      resize: false,
-      parent: null,
-      minimizable: false,
-      maximizable: false,
-      frame: false
-    })
-
-    // and load the index.html of the app.
-    result.loadURL(url.format({
-      pathname: path.join(__dirname + /app/, 'quickStart.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-
-    result.on('closed', function () {
-      log.info('Closing quick start window')
-      result = null
-    })
-
-    return result
-  }
-
-  // -- event handlers
-
-  // called when the config retrieval from the simhub instance has completed
-  onSimhubOpenURLDone (callbackArg, apiData) {
-    let documentWindow = createDocumentWindow()
-    this.documentWindows.push(documentWindow)
-
-    // wait till the dom has loaded before telling it to load the given
-    // configuration
-    documentWindow.webContents
-      .on('dom-ready',
-        function () {
-          documentWindow.webContents.send(
-            APP_IPC.IPCMSG_CONFIG_URL_DATA, apiData)
-        })
-
-    // hide the quickstart window
-    this.quickStartWindow.close()
-  }
-
-  onIPCSimhubCreateNewButton (event) {
-    this.documentWindows.push(createDocumentWindow())
-    this.quickStartWindow.close()
-  }
-
-  onIPCSimhubURLGoButton (event, arg) {
-    var requestId = guid.raw()
-    var parsedURL = new URL(arg)
-    var url = parsedURL.protocol + '//' + parsedURL.hostname
-    var port = parsedURL.port != '' ? parsedURL.port : 3000
-    var host = url + ':' + port
-
-    settings.set('api.url', url, {prettify: true})
-      .set('api.port', port, {prettify: true})
-
-    // request the configuration data from the given simhub instance
-    this.callAPI(
-      {from: 'app', host: host, path: 'pokeys'},
-      this.onSimhubOpenURLDone.bind(this), event)
-
-    settings.set(
-      'recent',
-      this.addToRecent({type: 'url', data: host, ts: new Date().getTime()}))
-  }
-
-  onIPCCloseQuickStart (event) {
-    this.quickStartWindow.close()
-  }
-
-  onIPCOpenQuickStartDialog (event, arg) {
-    this.quickStartWindow = this.openQuickStartDialog()
-  }
-
-  // This method will be called when Electron has finished
-  // initialization and is ready to create browser windows.
-  // Some APIs can only be used after this event occurs.
-  onElectronAppReady () {
-    log.info('Application is ready')
-    log.info('api url - ' + settings.get('api.url'))
-
-    if (settings.get('quickStart', true)) {
-      log.info('Using quickStart')
-      this.quickStartWindow = this.openQuickStartDialog()
-    }
-  }
-
-  onElectronAppActivate () {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (this.quickStartWindow === null) {
-      this.quickStartWindow = openQuickStartDialog()
-    }
-  }
-
-  onElectronAppWindowsAllClosed () {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    this.app.quit()
-    console.log('quitting')
-  }
-}
-
-let MainController = new MainViewController()
+let MainController = new MainViewController();

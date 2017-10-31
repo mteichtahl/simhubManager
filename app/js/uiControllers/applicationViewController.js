@@ -11,6 +11,10 @@ let guid = require('guid')
  */
 
 class ApplicationViewController {
+
+    constructor(){
+         this.documentWindows = [];
+    }
   /**
    * Invokes REST endpoint configured by @param
    * @param {*} endpoint parameters (host, path)

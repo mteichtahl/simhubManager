@@ -1,5 +1,6 @@
-const APP_IPC = require('./ipc-messages.js');
+'use strict'
 
+const APP_IPC = require('./ipc-messages.js');
 const ipc = require('electron').ipcRenderer;
 const log = require('electron').remote.getGlobal('log');
 const settings = require('electron').remote.getGlobal('settings');
@@ -24,6 +25,7 @@ var renderRecents = function() {
     </span></span><br><br>`);
   })
 };
+
 ipc.on(APP_IPC.IPCMSG_CONFIG_URL_DATA, (event, data) => {console.log(data)})
 
 $(function() {

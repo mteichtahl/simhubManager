@@ -1,1 +1,30 @@
-{"test":"This is a test","quickStart":true,"api":{"port":"3000","url":"http://127.0.0.1"},"recent":[{"type":"url","data":"http://127.0.0.1:3000","ts":1509420703390},{"type":"url","data":"http://127.0.0.1:3000","ts":1509420774624},{"type":"url","data":"http://127.0.0.1:3000","ts":1509420813568},{"type":"url","data":"http://127.0.0.1:3000","ts":1509420854490}]}
+{
+    "test": "This is a test",
+    "quickStart": true,
+    "api": {
+        "port": "3000",
+        "url": "http://127.0.0.1"
+    },
+    "recent": [
+        {
+            "type": "url",
+            "data": "http://127.0.0.1:3000",
+            "ts": 1509420703390
+        },
+        {
+            "type": "url",
+            "data": "http://127.0.0.1:3000",
+            "ts": 1509420774624
+        },
+        {
+            "type": "url",
+            "data": "http://127.0.0.1:3000",
+            "ts": 1509420813568
+        },
+        {
+            "type": "url",
+            "data": "http://127.0.0.1:3000",
+            "ts": 1509420854490
+        }
+    ]
+}
