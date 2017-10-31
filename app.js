@@ -1,11 +1,12 @@
-const APP_IPC = require('./app/ipc-messages.js')
-
+'use strict'
+const APP_IPC = require('./app/js/ipc-messages.js')
 const electron = require('electron')
-const {remote} = require('electron')
+const { remote } = require('electron')
+var ApplicationViewController = require('./app/js/uiControllers/applicationViewController')
+let guid = require('guid')
 
 const URL = require('url-parse')
-let rp = require('request-promise')
-let guid = require('guid')
+
 let ipc = require('electron').ipcMain
 let _ = require('underscore')
 
@@ -66,48 +67,7 @@ function createDocumentWindow () {
   return documentWindow
 }
 
-/**
- * This basic view controller class serves to provide shared
- * controller functionality between the application controller
- * and the various document controllers used by the pokey config
- * editor application
- */
-
-class ConfigurationViewController {
-  /**
-   * Invokes REST endpoint configured by @param
-   * @param {*} endpoint parameters (host, path)
-   * @param {*} function to invoke when REST request complete
-   * @param {*} argument to pass through to completion callback
-   */
-  callAPI (params, cb, callbackArg) {
-    var requestId = guid.raw()
-    log.info(`[${requestId}] ${params.from} fetching ${params.path} from API `)
-
-    var options =
-    {
-      uri: `${params.host}/${params.path}`,
-      headers: {'User-Agent': 'Request-Promise'},
-      json: true,
-      requestId: requestId,
-      from: params.from,
-      host: params.host,
-      path: params.path
-    }
-
-    rp(options)
-      .then(function (data) {
-        log.info(
-          `[${options.requestId}] Completed fetch for ${options.from} - ${options.uri} `)
-        cb(callbackArg, data)
-      })
-      .catch(function (err) {
-        console.log('FAILED', err)
-      })
-  }
-}
-
-class PokeyConfigurationEditorController extends ConfigurationViewController {
+class MainViewController extends ApplicationViewController {
   constructor () {
     super()
     this.app = require('electron').app
@@ -278,4 +238,4 @@ class PokeyConfigurationEditorController extends ConfigurationViewController {
   }
 }
 
-let ApplicationController = new PokeyConfigurationEditorController()
+let MainController = new MainViewController()

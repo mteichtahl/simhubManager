@@ -19,6 +19,7 @@
     "electron-ipc-responder": "^1.0.4",
     "electron-log": "^2.2.9",
     "electron-settings": "^3.1.1",
+    "electron-tabs": "^0.8.0",
     "electron-tree-view": "^1.1.0",
     "graphlib": "^2.1.1",
     "guid": "0.0.12",
