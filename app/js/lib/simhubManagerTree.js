@@ -1,6 +1,6 @@
 'use strict'
 const _ = require('lodash')
-const APP_IPC = require('../../ipc-messages.js')
+const APP_IPC = require('../ipc-messages.js')
 const {Tree} = require('./tree')
 const ipc = require('electron').ipcRenderer
 const log = require('electron').remote.getGlobal('log')

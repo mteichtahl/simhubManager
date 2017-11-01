@@ -1,9 +1,9 @@
-const APP_IPC = require('./js/ipc-messages.js')
+// const APP_IPC = require('../ipc-messages.js')
 
 // const ipc = require('electron').ipcRenderer
 // const log = require('electron').remote.getGlobal('log')
 
-// const jQuery = $ = require('jquery')
+const jQuery = $ = require('jquery')
 
 const TabViewController = require('./js/uiControllers/tabViewController')
 
@@ -27,6 +27,7 @@ class ConfigTabViewController extends TabViewController {
   constructor () {
     super()
     console.log('ConfigTabViewController')
+    $.fn.editable.defaults.mode = 'inline'
   }
 
 }
@@ -83,7 +84,6 @@ module.exports = ConfigTabViewController
 
 // $(function () {
 //   // Tell x-editable to use inline
-//   $.fn.editable.defaults.mode = 'inline'
 
 //   $('#indexOpenButton').on('click', function (e) {
 //     ipc.send(APP_IPC.IPCMSG_OPEN_QUICK_START, {from: 'index'})

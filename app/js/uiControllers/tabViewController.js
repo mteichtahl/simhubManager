@@ -1,4 +1,3 @@
-'use strict'
 const APP_IPC = require('../ipc-messages.js')
 
 const ipc = require('electron').ipcRenderer
