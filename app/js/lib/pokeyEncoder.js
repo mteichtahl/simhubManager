@@ -5,7 +5,6 @@ const guid = require('guid')
 
 class PokeyEncoder {
   constructor (data, pokeyIndex) {
-    console.log('here', data)
     this.name = data.name
     this.description = data.description
     this.type = data.type

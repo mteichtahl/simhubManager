@@ -3,7 +3,6 @@ const _ = require('lodash')
 
 class EncoderEditableTable {
   constructor (data, pokey) {
-    console.log('EncoderEditableTable', data)
     this.name = data.name
     this.type = data.type
     this.description = data.description || ''

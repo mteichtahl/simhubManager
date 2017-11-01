@@ -1,131 +1,627 @@
 {
-  "pokeys": [{
-      "serialNumber": "25774",
-      "name": "pokey_1",
-      "pins": [{
-          "pin": 1,
-          "name": "I_OH_FUEL_PUMP_LA",
-          "description": "Left AFT fuel pump indicator",
-          "type": "DIGITAL_INPUT"
-        },
-        {
-          "pin": 2,
-          "name": "I_OH_FUEL_PUMP_LF",
-          "description": "Left FWD fuel pump indicator",
-          "inverted": true,
-          "type": "DIGITAL_OUTPUT"
-        },
-        {
-          "pin": 3,
-          "name": "I_OH_EGT",
-          "description": "Left FWD fuel pump indicator",
-          "type": "DIGITAL_OUTPUT"
-        }
-      ],
+
+  "configuration": [{
+      "serialNumber": "25770",
+      "name": "DCMetering",
+      "_line_comment_7": " pin           - integer - any valid IO pin [1-55]",
+      "_line_comment_8": " name          - string  - name of the pin",
+      "_line_comment_9": " type          - string  - DIGITAL_INPUT, DIGITAL_OUTPUT",
+      "_line_comment_10": " description   - string ",
+      "_line_comment_11": " units         - string",
+      "_line_comment_12": " default       - integer - value on start",
+      "pins": [],
+      "_line_comment_15": " pins 1-2 as encoder 1",
+      "_line_comment_16": " pins 5-6 as encoder 2",
+      "_line_comment_17": " pins 15-16 as encoder 3",
       "encoders": [{
-          "encoder": 2,
-          "type": "fast",
-          "name": "V_OH_FLTALT",
-          "description": "Testing one",
-          "units": "feet",
-          "min": 0,
-          "max": 45000,
-          "default": 10000,
-          "step": 100,
-          "invertDirection": 1
-        },
-        {
-          "encoder": 3,
-          "type": "fast",
-          "name": "ANOTHER ENCODER",
-          "description": "Testing two",
-          "units": "feet",
-          "min": 0,
-          "max": 45000,
-          "default": 10000,
-          "step": 100,
-          "invertDirection": 1
-        },
-        {
-          "encoder": 5,
-          "type": "normal",
-          "name": "V_OH_ENCODER",
-          "description": "Testing tree",
-          "units": "feet",
-          "min": 0,
-          "max": 45000,
-          "default": 10000,
-          "step": 100,
-          "invertDirection": 1,
-          "pins": [51, 52]
-        }
-      ]
-    },
-    {
-      "serialNumber": "25765",
-      "name": "pokey_2",
-      "pins": [{
-          "pin": 1,
-          "name": "I_OH_FUEL_PUMP_LA",
-          "description": "Left AFT fuel pump indicator",
-          "type": "DIGITAL_OUTPUT"
-        },
-        {
-          "pin": 2,
-          "name": "I_OH_FUEL_PUMP_LF",
-          "description": "Left FWD fuel pump indicator",
-          "type": "DIGITAL_OUTPUT"
-        }
-      ],
-      "encoders": [{
-        "encoder": 4,
-        "type": "ufast",
-        "name": "UF_ENCODER",
+        "encoder": 1,
+        "name": "V_OH_FLTALT",
         "description": "Testing encoder",
         "units": "feet",
         "min": 0,
         "max": 45000,
         "default": 10000,
         "step": 100,
-        "invertDirection": 1
+        "invertDirection": 1,
+        "type": "fast"
       }],
       "displays": [{
+          "_line_comment_34": "uses pins 9,10,11",
           "type": "microdriver",
-          "name": "Display 1",
-          "description": "lower display",
+          "name": "AC/DC Metering lower display",
           "enabled": 1,
           "groups": [{
-              "name": "group-1",
+              "name": "N_ELEC_PANEL_LOWER_LEFT",
               "digits": 2,
               "position": 0
             },
             {
-              "name": "group-2",
+              "name": "N_ELEC_PANEL_LOWER_CENTER",
               "digits": 3,
               "position": 2
             },
             {
-              "name": "group-3",
+              "name": "N_ELEC_PANEL_LOWER_RIGHT",
               "digits": 3,
               "position": 5
             }
           ]
         },
         {
+          "_line_comment_57": "uses pins 23,24,25",
           "type": "microdriver",
-          "name": "Display 2",
+          "name": "AC/DC Metering upper display",
           "enabled": 1,
           "groups": [{
-            "name": "group-1",
-            "digits": 2,
-            "position": 0
-          }, {
-            "name": "group-2",
-            "digits": 3,
-            "position": 2
-          }]
+              "name": "N_ELEC_PANEL_UPPER_LEFT",
+              "digits": 2,
+              "position": 0
+            },
+            {
+              "name": "N_ELEC_PANEL_UPPER_RIGHT",
+              "digits": 3,
+              "position": 2
+            }
+          ]
         }
       ]
+    },
+    {
+      "_line_comment_77": " pokey_1 ",
+      "_line_comment_78": " Fuel Control Panel & Bus Switching Panel",
+      "serialNumber": "25774",
+      "name": "pokey_1",
+      "pins": [{
+          "pin": 1,
+          "name": "I_OH_FUEL_PUMP_LA",
+          "description": "Left AFT fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 2,
+          "name": "I_OH_FUEL_PUMP_LF",
+          "description": "Left FWD fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 3,
+          "name": "I_OH_FUEL_PUMP_RF",
+          "description": "Right FWD fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 4,
+          "name": "I_OH_FUEL_PUMP_RA",
+          "description": "Right AFT fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 5,
+          "name": "I_OH_FUEL_PUMP_CL",
+          "description": "Center left fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 6,
+          "name": "I_OH_FUEL_PUMP_CR",
+          "description": "Center right fuel pump indicator",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 7,
+          "name": "I_OH_FILTER_BYPASS1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 8,
+          "name": "I_OH_CROSSFEED",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 9,
+          "name": "I_OH_FILTER_BYPASS2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 10,
+          "name": "I_OH_SPAR_VALVE_CLOSED_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 11,
+          "name": "I_OH_ENG_VALVE_CLOSED_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 12,
+          "name": "I_OH_SPAR_VALVE_CLOSED_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 13,
+          "name": "I_OH_ENG_VALVE_CLOSED_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 14,
+          "name": "I_OH_APU_MAINT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 15,
+          "name": "I_OH_APU_LOW_OIL_PRESSURE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 16,
+          "name": "I_OH_APU_FAULT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 17,
+          "name": "I_OH_APU_OVERSPEED",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 18,
+          "name": "I_OH_GEN_BUS_OFF1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 19,
+          "name": "I_OH_APU_GEN_OFF",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 20,
+          "name": "I_OH_GEN_BUS_OFF2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 21,
+          "name": "I_OH_SOURCE_OFF1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 22,
+          "name": "I_OH_SOURCE_OFF2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 23,
+          "name": "I_OH_TRANS_OFF1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 24,
+          "name": "I_OH_TRANS_OFF2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "_line_comment_209": " should send GRD/OFF",
+          "pin": 41,
+          "name": "S_OH_ENG_START_L",
+          "type": "DIGITAL_INPUT"
+        },
+        {
+          "pin": 44,
+          "name": "S_OH_YAW_DAMPER",
+          "type": "DIGITAL_INPUT"
+        }
+      ]
+    },
+    {
+      "_line_comment_222": " pokey_2",
+      "serialNumber": "25423",
+      "name": "pokey_2",
+      "pins": [{
+          "pin": 1,
+          "name": "I_OH_STDBY_POWER_OFF",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 2,
+          "name": "I_OH_DRIVE1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 3,
+          "name": "I_OH_GROUND_POWER_AVAILABLE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 4,
+          "name": "I_OH_DRIVE2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 5,
+          "name": "I_OH_HYD_STBY_LOW_PRESS",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 6,
+          "name": "I_OH_HYD_STBY_LOW_QUANT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 7,
+          "name": "I_OH_FLT_CTRL_LOW_PRESS_B",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 8,
+          "name": "I_OH_FLT_CTRL_LOW_PRESS_A",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 9,
+          "name": "I_OH_FEEL_DIFF_PRESS",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 11,
+          "name": "I_OH_SPEED_TRIM",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 12,
+          "name": "I_OH_MACH_TRIM",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 13,
+          "name": "I_OH_AUTO_SLAT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 14,
+          "name": "I_OH_YAW_DAMPER",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 24,
+          "name": "I_OH_BATT_DISCHARGE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 23,
+          "name": "I_OH_TR_UNIT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 22,
+          "name": "I_OH_ELEC",
+          "type": "DIGITAL_OUTPUT"
+        },
+
+        {
+          "pin": 28,
+          "name": "S_OH_LIGHT_RWY2",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 29,
+          "name": "S_OH_LIGHT_RWY1",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 34,
+          "name": "B_STARTER_SOLENOID_2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 35,
+          "name": "B_STARTER_SOLENOID_1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 36,
+          "name": "S_OH_FUEL_PUMP_CR",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 37,
+          "name": "S_OH_FUEL_PUMP_LA",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 38,
+          "name": "S_OH_FUEL_PUMP_CL",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 39,
+          "name": "S_OH_FUEL_PUMP_RF",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 40,
+          "name": "S_OH_FUEL_PUMP_RA",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 41,
+          "name": "S_OH_FUEL_PUMP_LF",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        },
+        {
+          "pin": 48,
+          "name": "S_OH_BUS_TRANSFER",
+          "type": "DIGITAL_INPUT",
+          "invert": true
+        }
+
+      ]
+    },
+    {
+      "_line_comment_375": " pokey_3",
+      "serialNumber": "26767",
+      "name": "pokey_3",
+      "pins": [{
+          "pin": 1,
+          "name": "I_OH_TEMP_PROBE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 2,
+          "name": "I_OH_CAPT_PITOT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 3,
+          "name": "I_OH_ELEV_PITOT1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 4,
+          "name": "I_OH_COWL_AI_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 5,
+          "name": "I_OH_COWL_VALVE_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 6,
+          "name": "I_OH_COWL_AI_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 7,
+          "name": "I_OH_WAI_VALVE_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 8,
+          "name": "I_OH_WINDOW_HEAT_OVT_FL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 9,
+          "name": "I_OH_AUX_PITOT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 10,
+          "name": "I_OH_CO_PITOT",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 11,
+          "name": "I_OH_ALPHA_VANE1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 12,
+          "name": "I_OH_ENG_HYD_PUMP_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 13,
+          "name": "I_OH_ELEV_PITOT2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 14,
+          "name": "I_OH_ALPHA_VANE2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 15,
+          "name": "I_OH_WINDOW_HEAT_FR",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 16,
+          "name": "I_OH_WINDOW_HEAT_SR",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 18,
+          "name": "I_OH_WINDOW_HEAT_OVT_SL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 19,
+          "name": "I_OH_WINDOW_HEAT_FL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 20,
+          "name": "I_OH_WINDOW_HEAT_SL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 21,
+          "name": "I_OH_WINDOW_HEAT_OVT_FR",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 22,
+          "name": "I_OH_ELEC_HYD_PUMP_OVHT_1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 23,
+          "name": "I_OH_WINDOW_HEAT_OVT_SR",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 24,
+          "name": "I_OH_WAI_VALVE_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 25,
+          "name": "I_OH_BLEED_TRIP_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 26,
+          "name": "I_OH_BLEED_TRIP_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 27,
+          "name": "I_OH_WINGBODY_OVT_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 28,
+          "name": "I_OH_DOOR_AFT_SERVICE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 29,
+          "name": "I_OH_WINGBODY_OVT_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 30,
+          "name": "I_OH_PRES_MANUAL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 31,
+          "name": "I_OH_ELEC_HYD_PUMP_1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 32,
+          "name": "I_OH_DOOR_FWD_SERVICE",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 33,
+          "name": "I_OH_DOOR_LEFT_FWD_OVERWING",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 34,
+          "name": "I_OH_DOOR_RIGHT_FWD_OVERWING",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 35,
+          "name": "I_OH_DOOR_EQUIP",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 36,
+          "name": "I_OH_DOOR_LEFT_AFT_OVERWING",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 37,
+          "name": "I_OH_DOOR_FWD_ENTRY",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 38,
+          "name": "I_OH_DOOR_AFT_ENTRY",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 39,
+          "name": "I_OH_DOOR_RIGHT_AFT_OVERWING",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 40,
+          "name": "I_OH_DOOR_AFT_CARGO",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 41,
+          "name": "I_OH_PACK_L",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 42,
+          "name": "I_OH_PRES_AUTO_FAIL",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 43,
+          "name": "I_OH_ENG_HYD_PUMP_1",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 44,
+          "name": "I_OH_PRES_OFFSCHED",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 45,
+          "name": "I_OH_PACK_R",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 46,
+          "name": "I_OH_ELEC_HYD_PUMP_2",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 47,
+          "name": "I_OH_DOOR_FWD_CARGO",
+          "type": "DIGITAL_OUTPUT"
+        },
+        {
+          "pin": 48,
+          "name": "I_OH_PRES_ALTN",
+          "type": "DIGITAL_OUTPUT"
+        }
+      ]
+    },
+    {
+      "serialNumber": "26766",
+      "name": "PokeyXX",
+      "servos": [{
+        "channel": 1,
+        "pin": 17,
+        "period": 20,
+        "name": "G_OH_EGT",
+        "description": "Exhaust gas temp",
+        "units": "degrees",
+        "min": 0,
+        "max": 710,
+        "default": 0,
+        "type": "analog"
+      }],
+      "pins": []
     }
   ]
+
+
+
 }

@@ -21,6 +21,7 @@ class PokeyDisplay {
       var self = this
       _.each(data.groups, (group) => {
         var newGroup = new PokeyDisplayGroup(group)
+        newGroup.type = data.type
         self.displayGroups.push(newGroup)
       })
     }

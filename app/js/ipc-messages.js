@@ -7,5 +7,7 @@ module.exports = {
   IPCMSG_CONFIG_URL_DATA: 'api-data',
   IPCMSG_UPDATE_PROPERTIES: 'update-properties',
   IPCMSG_RENDER_DIO_PROPERTIES: 'render-dio-properties',
-  IPCMSG_RENDER_ENCODER_PROPERTIES: 'render-encoder-properties'
+  IPCMSG_RENDER_ENCODER_PROPERTIES: 'render-encoder-properties',
+  IPCMSG_RENDER_DISPLAY_PROPERTIES: 'render-display-properties',
+  IPCMSG_RENDER_SERVO_PROPERTIES: 'render-servo-properties'
 }

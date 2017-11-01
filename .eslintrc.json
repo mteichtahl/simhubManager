@@ -1,0 +1,34 @@
+{
+    "extends": [
+        "eslint:recommended"
+    ],
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "require-jsdoc": 0,
+        "no-console":"off",
+        "no-undef" : 0,
+        "brace-style": 0,
+        "valid-jsdoc": 1, // Ensure JSDoc comments are valid (off by default)
+        "comma-dangle": 0, // disallow or enforce trailing commas
+        "semi": [
+            1,
+            "always"
+        ], // require or disallow use of semicolons instead of ASI
+        "semi-spacing": [
+            1,
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "max-len": [
+            2,
+            180,
+            2
+        ] // specify the maximum length of a line in your program (off by default)
+    }
+}
