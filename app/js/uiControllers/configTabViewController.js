@@ -1,9 +1,11 @@
+//let $ = require('jquery'), jQuery = $
+
 const APP_IPC = require('./js/ipc-messages.js')
 
 // const ipc = require('electron').ipcRenderer
 // const log = require('electron').remote.getGlobal('log')
 
-// const jQuery = $ = require('jquery')
+console.log('configTabViewController')
 
 const TabViewController = require('./js/uiControllers/tabViewController')
 
@@ -27,7 +29,34 @@ class ConfigTabViewController extends TabViewController {
   constructor () {
     super()
     console.log('ConfigTabViewController')
-  }
+    let tabGroup = new TabGroup()
+
+  let configureTab = tabGroup.addTab({
+    title: 'Configure',
+    src: './configView.html',
+    webviewAttributes: {
+      'nodeintegration': true
+    },
+    icon: 'fa fa-home',
+    visible: true,
+    closable: false,
+    active: true,
+    ready: tab => {
+      let webview = tab.webview
+      if (!!webview) {
+        webview.addEventListener('dom-ready', () => {
+          webview.openDevTools()
+        })
+      }
+    }
+  }).activate()
+
+  let approachTab = tabGroup.addTab({
+    title: 'Approach',
+    src: 'http://www.google.com',
+    visible: true
+  })
+}
 
 }
 
@@ -81,49 +110,49 @@ module.exports = ConfigTabViewController
 //   $('.isEditable').editable()
 // })
 
-// $(function () {
-//   // Tell x-editable to use inline
-//   $.fn.editable.defaults.mode = 'inline'
+$(function () {
+  // Tell x-editable to use inline
+  // $.fn.editable.defaults.mode = 'inline'
 
-//   $('#indexOpenButton').on('click', function (e) {
-//     ipc.send(APP_IPC.IPCMSG_OPEN_QUICK_START, {from: 'index'})
-//   })
+  // $('#indexOpenButton').on('click', function (e) {
+  //   ipc.send(APP_IPC.IPCMSG_OPEN_QUICK_START, {from: 'index'})
+  // })
 
-//   $('.topPanel').resizable({ handleSelector: '.splitter', resizeHeight: true })
+  // $('.topPanel').resizable({ handleSelector: '.splitter', resizeHeight: true })
 
-//   let tabGroup = new TabGroup()
+  // let tabGroup = new TabGroup()
 
-//   let configureTab = tabGroup.addTab({
-//     title: 'Configure',
-//     src: './configView.html',
-//     webviewAttributes: {
-//       'nodeintegration': true
-//     },
-//     icon: 'fa fa-home',
-//     visible: true,
-//     closable: false,
-//     active: true,
-//     ready: tab => {
-//       let webview = tab.webview
-//       if (!!webview) {
-//         webview.addEventListener('dom-ready', () => {
-//           webview.openDevTools()
-//         })
-//       }
-//     }
-//   }).activate()
+  // let configureTab = tabGroup.addTab({
+  //   title: 'Configure',
+  //   src: './configView.html',
+  //   webviewAttributes: {
+  //     'nodeintegration': true
+  //   },
+  //   icon: 'fa fa-home',
+  //   visible: true,
+  //   closable: false,
+  //   active: true,
+  //   ready: tab => {
+  //     let webview = tab.webview
+  //     if (!!webview) {
+  //       webview.addEventListener('dom-ready', () => {
+  //         webview.openDevTools()
+  //       })
+  //     }
+  //   }
+  // }).activate()
 
-//   let approachTab = tabGroup.addTab({
-//     title: 'Approach',
-//     src: 'http://www.google.com',
-//     visible: true
-//   })
+  // let approachTab = tabGroup.addTab({
+  //   title: 'Approach',
+  //   src: 'http://www.google.com',
+  //   visible: true
+  // })
 
-//   // var paper = Raphael(222, 0, 1000, 1000)
-//   // var rect = paper.rect(50, 50, 100, 100)
+  // var paper = Raphael(222, 0, 1000, 1000)
+  // var rect = paper.rect(50, 50, 100, 100)
 
-// // var c = paper.image('images/pokey57E.jpg', 50, 50, 120, 280)
-// })
+// var c = paper.image('images/pokey57E.jpg', 50, 50, 120, 280)
+})
 
 // /**
 //  * Load the system configuration from the JSON config supplied

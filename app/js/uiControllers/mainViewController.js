@@ -1,10 +1,67 @@
+const electron = require('electron');
+const url = require('url');
+const guid = require('guid');
+const URL = require('url-parse');
+const path = require('path');
+
+const _ = require('underscore');
+const util = require('util')
+
 const APP_IPC = require('../ipc-messages.js');
 const APP = require('../app-messages.js');
 let ipc = require('electron').ipcMain;
 
 const ApplicationViewController = require('./applicationViewController')
 
+global.settings = require('electron-settings');
 
+settings.setPath('app/config/config.json');
+
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow;
+
+/**
+ * createDocumentWindows
+ *
+ * Creates the main document window
+ *
+ * @return {BrowserWindow} documentWindow
+ */
+function createDocumentWindow() {
+  log.info('Creating document window');
+  global.settings = settings;
+
+  // Create the browser window
+  let documentWindow = new BrowserWindow({
+    'width': 1350,
+    'height': 800,
+    'center': true,
+    'min-width': 500,
+    'min-height': 200,
+    'accept-first-mouse': true,
+    'title-bar-style': 'hidden'
+  });
+
+  //documentWindow.webContents.openDevTools();
+
+  // and load the index.html of the app.
+  documentWindow.loadURL(url.format({
+    pathname: path.join(__dirname + '/../../', 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
+
+  // Emitted when the window is closed.
+  documentWindow.on('closed', function() {
+      log.info('Closing document window');
+      // Dereference the window object, usually you would store windows
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      documentWindow = null;
+    });
+
+  return documentWindow;
+}
 class MainViewController extends ApplicationViewController {
   /**
    * Creates an instance of MainViewController.
@@ -24,59 +81,58 @@ class MainViewController extends ApplicationViewController {
 
     this.app.on(APP.READY, this.appReady.bind(this));
     this.app.on(APP.ACTIVATE, this.onElectronAppActivate.bind(this));
-    this.app.on(APP.WINDOWS_ALL_CLOSED, this.onElectronAppWindowsAllClosed.bind(this));
-        
+    this.app.on(APP.WINDOWS_ALL_CLOSED, this.onElectronAppWindowsAllClosed.bind(this));        
+  }
+
+  /**
+   * udates MRU configuration data 
+   * @param {any} data fds fdsa
+   * @return {(Array)} ordered list of time stamped MRU itemd
+   * @memberof MainViewController fdsa fdsa
+   */
+  addToRecent(data) {
+    const recent = settings.get('recent');
+    if (recent.length <= 3) {
+      recent.push(data);
+    } 
+    else {
+      recent[0] = data;
     }
+    return _.sortBy(recent, 'ts');
+  }
 
-    /**
-     * udates MRU configuration data 
-     * @param {any} data fds fdsa
-     * @return {(Array)} ordered list of time stamped MRU itemd
-     * @memberof MainViewController fdsa fdsa
-     */
-    addToRecent(data) {
-        const recent = settings.get('recent');
-        if (recent.length <= 3) {
-        recent.push(data);
-        } else {
-        recent[0] = data;
-        }
-        return _.sortBy(recent, 'ts');
+  /**
+   * Handle device tree property changes
+   *
+   * @param {any} event trigger event 
+   * @param {any} node Node selected
+   * @memberof MainViewController
+   */
+  onUpdateProperties(event, node) {
+    const type = (node.data.type).toUpperCase();
+
+    if (type == 'DIGITAL_INPUT' || type == 'DIGITAL_OUTPUT') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, node.data);
     }
-
-    /**
-     * Handle device tree property changes
-     *
-     * @param {any} event trigger event 
-     * @param {any} node Node selected
-     * @memberof MainViewController
-     */
-    onUpdateProperties(event, node) {
-        const type = (node.data.type).toUpperCase();
-
-        if (type == 'DIGITAL_INPUT' || type == 'DIGITAL_OUTPUT') {
-        event.sender.send(APP_IPC.IPCMSG_RENDER_DIO_PROPERTIES, node.data);
-        }
-        if (type == 'FAST' || type == 'NORMAL' || type == 'UFAST') {
-        event.sender.send(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, node.data);
-        }
-        if (type == 'MICRODRIVER') {
-        event.sender.send(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, node.data);
-        }
-        if (type == 'ANALOG') {
-        event.sender.send(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, node.data);
-        }
+    if (type == 'FAST' || type == 'NORMAL' || type == 'UFAST') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_ENCODER_PROPERTIES, node.data);
     }
+    if (type == 'MICRODRIVER') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_DISPLAY_PROPERTIES, node.data);
+    }
+    if (type == 'ANALOG') {
+      event.sender.send(APP_IPC.IPCMSG_RENDER_SERVO_PROPERTIES, node.data);
+    }
+  }
 
-    /**
-     * (re-)create the main quick start window
-     *
-     * @return {(BrowserWindow)} Browser window
-     * @memberof MainViewController
-     */
-    openQuickStartDialog() {
-        
-        let result = new BrowserWindow({
+  /**
+   * (re-)create the main quick start window
+   *
+   * @return {(BrowserWindow)} Browser window
+   * @memberof MainViewController
+   */
+  openQuickStartDialog() {        
+      let result = new BrowserWindow({
         'width': 750,
         'height': 500,
         'min-width': 500,
@@ -88,22 +144,24 @@ class MainViewController extends ApplicationViewController {
         'minimizable': false,
         'maximizable': false,
         'frame': true
-        });
+      });
 
-        // and load the index.html of the app.
-        result.loadURL(url.format({
-        pathname: path.join(__dirname + /app/, 'quickStart.html'),
+      //result.webContents.openDevTools();
+
+      // and load the index.html of the app.
+      result.loadURL(url.format({
+        pathname: path.join(__dirname + '/../../', 'quickStart.html'),
         protocol: 'file:',
         slashes: true
-        }));
+      }));
 
-        result.on('closed', function() {
+      result.on('closed', function() {
         log.info('Closing quick start window');
         result = null;
-        });
-
-        return result;
-    }
+      });
+      
+      return result;
+  }
 
   // -- event handlers
 
@@ -142,7 +200,7 @@ class MainViewController extends ApplicationViewController {
 
     // request the configuration data from the given simhub instance
     this.callAPI(
-      {from: 'app', host: host, path: 'pokeys'},
+      {from: 'app', host: host, path: 'configuration'},
       this.onSimhubOpenURLDone.bind(this), event);
 
     settings.set(

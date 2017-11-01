@@ -1,17 +1,15 @@
 'use strict'
 
-const APP_IPC = require('./ipc-messages.js');
-const ipc = require('electron').ipcRenderer;
-const log = require('electron').remote.getGlobal('log');
-const settings = require('electron').remote.getGlobal('settings');
-const $ = jQuery = require('jquery');
-const _ = require('lodash');
+const ipc = require('electron').ipcRenderer
+const log = require('electron').remote.getGlobal('log')
+const settings = require('electron').remote.getGlobal('settings')
+let $ = require('jquery'), jQuery = $
+const _ = require('lodash')
+const validator = require('validator')
+const moment = require('moment')
 
-const validator = require('validator');
-const moment = require('moment');
+const APP_IPC = require('./js/ipc-messages.js');
 
-const loaded = 'quickStart.js';
-log.info(`${loaded}`);
 
 var renderRecents = function() {
   var index = 0;

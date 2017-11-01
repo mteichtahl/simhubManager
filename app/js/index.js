@@ -1,9 +1,9 @@
 'use strict'
-const APP_IPC = require('./ipc-messages.js')
-const ipc = require('electron').ipcRenderer
-const log = require('electron').remote.getGlobal('log')
-const $ = jQuery = require('jquery')
-const TabGroup = require('electron-tabs')
+let APP_IPC = require('./js/ipc-messages.js')
+let ipc = require('electron').ipcRenderer
+let log = require('electron').remote.getGlobal('log')
+let $ = require('jquery'), jQuery = $
+let TabGroup = require('electron-tabs')
 
 var loaded = 'index.js'
 log.info(`${loaded}`)

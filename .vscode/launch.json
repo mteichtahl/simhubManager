@@ -10,7 +10,7 @@
             "name": "Electron Main",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
             "program": "${workspaceFolder}/app.js",
-            "protocol": "legacy"
+            "protocol": "inspector"
         },
         {
             "type": "node",
